@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Xrns2XMod</RootNamespace>
+    <AssemblyName>Xrns2XMod</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Bass.Net, Version=2.4.8.3, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\Bass.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.5.452, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Nini, Version=1.1.0.0, Culture=neutral, PublicKeyToken=691faec150a7fa7b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\Nini.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AudioEncUtil.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="ConversionException.cs" />
+    <Compile Include="EventReportProgress.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="IConverter.cs" />
+    <Compile Include="InstrumentDataBase.cs" />
+    <Compile Include="InstrumentDataMOD.cs" />
+    <Compile Include="InstrumentDataXM.cs" />
+    <Compile Include="IniWrapper.cs" />
+    <Compile Include="ModCommands.cs" />
+    <Compile Include="ModCommonBase.cs" />
+    <Compile Include="ModConverter.cs" />
+    <Compile Include="ModSettings.cs" />
+    <Compile Include="ModUtils.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="RenoiseSong63.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsBase.cs" />
+    <Compile Include="SongDataFactory.cs" />
+    <Compile Include="SongStruct.cs" />
+    <Compile Include="XMExtras.cs" />
+    <Compile Include="BassWrapper.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="XMCommands.cs" />
+    <Compile Include="XMConverter.cs" />
+    <Compile Include="XmSettings.cs" />
+    <Compile Include="XMUtils.cs" />
+    <Compile Include="XrnsManager.cs" />
+    <Compile Include="XrnsManagerException.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ini\README.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libs\Bass.Net.dll" />
+    <Content Include="libs\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="libs\Nini.dll" />
+    <Content Include="libs\x64\bass.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libs\x64\bassflac.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libs\x64\bassmix.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libs\x86\bass.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libs\x86\bassflac.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="libs\x86\bassmix.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="specifications\mod-spec.txt" />
+    <Content Include="specifications\Protracker_Module_Format.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="resources\examples\test_adjust_sample_frequency.xrns" />
+    <None Include="resources\examples\test_default_volume.xrns" />
+    <None Include="resources\examples\test_delay_column.xrns" />
+    <None Include="resources\examples\test_fade_volume_compatibility_trick.xrns" />
+    <None Include="resources\examples\test_ft2_mode.xrns" />
+    <None Include="resources\examples\test_global_commands.xrns" />
+    <None Include="resources\examples\test_global_volume_xm_commands.xrns" />
+    <None Include="resources\examples\test_instruments_commands.xrns" />
+    <None Include="resources\examples\test_instrument_envelopes.xrns" />
+    <None Include="resources\examples\test_instrument_keymap.xrns" />
+    <None Include="resources\examples\test_mod_sample_conversion.xrns" />
+    <None Include="resources\examples\test_multi_columns.xrns" />
+    <None Include="resources\examples\test_panning_column.xrns" />
+    <None Include="resources\examples\test_renoise_standard_tpl_mode.xrns" />
+    <None Include="resources\examples\test_sample_commands.xrns" />
+    <None Include="resources\examples\test_tick_commands.xrns" />
+    <None Include="resources\examples\test_volume_column.xrns" />
+    <None Include="resources\examples\test_volume_scaling_mode.xrns" />
+    <None Include="resources\templates\empty_mod.xrns" />
+    <None Include="resources\templates\empty_xm.xrns" />
+    <None Include="specifications\XM_file_format.pdf" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
