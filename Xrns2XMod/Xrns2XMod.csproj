@@ -122,26 +122,66 @@
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="resources\examples\test_adjust_sample_frequency.xrns" />
-    <None Include="resources\examples\test_default_volume.xrns" />
-    <None Include="resources\examples\test_delay_column.xrns" />
-    <None Include="resources\examples\test_fade_volume_compatibility_trick.xrns" />
-    <None Include="resources\examples\test_ft2_mode.xrns" />
-    <None Include="resources\examples\test_global_commands.xrns" />
-    <None Include="resources\examples\test_global_volume_xm_commands.xrns" />
-    <None Include="resources\examples\test_instruments_commands.xrns" />
-    <None Include="resources\examples\test_instrument_envelopes.xrns" />
-    <None Include="resources\examples\test_instrument_keymap.xrns" />
-    <None Include="resources\examples\test_mod_sample_conversion.xrns" />
-    <None Include="resources\examples\test_multi_columns.xrns" />
-    <None Include="resources\examples\test_panning_column.xrns" />
-    <None Include="resources\examples\test_renoise_standard_tpl_mode.xrns" />
-    <None Include="resources\examples\test_sample_commands.xrns" />
-    <None Include="resources\examples\test_tick_commands.xrns" />
-    <None Include="resources\examples\test_volume_column.xrns" />
-    <None Include="resources\examples\test_volume_scaling_mode.xrns" />
-    <None Include="resources\templates\empty_mod.xrns" />
-    <None Include="resources\templates\empty_xm.xrns" />
+    <None Include="resources\examples\test_adjust_sample_frequency.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_default_volume.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_delay_column.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_fade_volume_compatibility_trick.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_ft2_mode.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_global_commands.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_global_volume_xm_commands.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_instruments_commands.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_instrument_envelopes.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_instrument_keymap.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_mod_sample_conversion.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_multi_columns.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_panning_column.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_renoise_standard_tpl_mode.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_sample_commands.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_tick_commands.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_volume_column.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\examples\test_volume_scaling_mode.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\templates\empty_mod.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\templates\empty_xm.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="specifications\XM_file_format.pdf" />
   </ItemGroup>
   <ItemGroup />
