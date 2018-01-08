@@ -1,1 +1,7 @@
 theme: jekyll-theme-cayman
+show_downloads: "true"
+title: "Xrns2XMod"
+description: "Xrns2XMOD is a Renoise to MOD / XM format converter"
+author: "Starred MediaSoft"
+plugins:
+- jekyll-seo-tag
