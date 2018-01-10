@@ -14,10 +14,10 @@ Xrns2XMod can "readjust" the sample data according to the Renoise volume value s
 These images show the result of the re-sample process based from the original sample volume
 
 _renoise original sample, with volume set to -10 db_  
-![renoise_resample_to_volume](https://user-images.githubusercontent.com/1042453/34800028-1f0e2c0a-f630-11e7-8f3c-4f23e63db622.jpg)
+![renoise_resample_to_volume](https://github.com/01010111/xrns2xmod/blob/master/docs/images/renoise_resample_to_volume.jpg?raw=true)
 
 _converted sample_  
-![mod_resample_to_volume](https://user-images.githubusercontent.com/1042453/34800026-1ef8bea6-f630-11e7-9eb8-1452ffe3988e.jpg)
+![mod_resample_to_volume](https://github.com/01010111/xrns2xmod/blob/master/docs/images/mod_resample_to_volume.jpg?raw=true)
 
 **Column mode (xm only)**
 
@@ -27,10 +27,10 @@ The sample data remains unchanged.
 
 _An example of the volume column conversion with 2 samples (one on the left and one on the right):_
 _volume value is 0db_  
-![volume_column_original](https://user-images.githubusercontent.com/1042453/34800228-e171aa9c-f630-11e7-9ef5-995358d6562a.jpg)
+![volume_column_original](https://github.com/01010111/xrns2xmod/blob/master/docs/images/volume_column_original.jpg?raw=true)
  
 _right volume value is -12db_  
-![volume_column_converted](https://user-images.githubusercontent.com/1042453/34800032-1f43c446-f630-11e7-96a1-199b0f093398.jpg)
+![volume_column_converted](https://github.com/01010111/xrns2xmod/blob/master/docs/images/volume_column_converted.jpg?raw=true)
 
 ## Default Sample Volume
 Renoise can't handle default volume sample, by the way it is possible to set a default volume for the sample in Xrns2XMod and then simulate it by put the default volume inside the second effect column of renoise (which is always ignored by Xrns2Xmod itself)
@@ -38,7 +38,7 @@ Renoise can't handle default volume sample, by the way it is possible to set a d
 Use the helper tool to assign the default volume and assign a key assigned to this macro feature
 
 _the default volume macro will assign the value to the second effect column of the line selected_  
-![default_volume](https://user-images.githubusercontent.com/1042453/34800019-1eac6d62-f630-11e7-991a-1b0ec94210aa.jpg)
+![default_volume](https://github.com/01010111/xrns2xmod/blob/master/docs/images/default_volume.jpg?raw=true)
 
 See below this documentation to read about instruments settings dialog tool
 
@@ -48,15 +48,15 @@ Since Renoise 2.8, Global effect volume is set inside the mastertrack column
 Xrns2XMod get the the volume effect command inside the mastertack first column and put the result on the first free column effect found starting from the left. An example below:
 
 _Global Volume_  
-![mastertrack](https://user-images.githubusercontent.com/1042453/34800023-1edc8376-f630-11e7-9896-e18ff3738e40.jpg)
+![mastertrack](https://github.com/01010111/xrns2xmod/blob/master/docs/images/mastertrack.jpg?raw=true)
 
 _The Global Volume effect, put on the free empty slot_  
-![mastertrack_converted](https://user-images.githubusercontent.com/1042453/34800022-1eceb764-f630-11e7-965b-ffd1b4e496ba.jpg)
+![mastertrack_converted](https://github.com/01010111/xrns2xmod/blob/master/docs/images/mastertrack_converted.jpg?raw=true)
 
 Therefore, take care to leave an empty slot on any instrument track in the line after using global volume effect
 
 ## Playback options
-![playback_mode](https://user-images.githubusercontent.com/1042453/34800027-1f04e9ec-f630-11e7-9e6d-86c16305b8aa.jpg)
+![playback_mode](https://github.com/01010111/xrns2xmod/blob/master/docs/images/playback_mode.jpg?raw=true)
 
 _OS Mode_ can be set in either ways, because Xrns2XMod can convert the Renoise value to Amiga/FT2.
 Btw, keep in mind that samples over 65536 bytes might have inaccurate value.
@@ -132,7 +132,7 @@ set bass email for registrated user
 set bass code for registrated user
 
 # Window GUI
-![xrns2xmod_gui](https://user-images.githubusercontent.com/1042453/34800033-1f55209c-f630-11e7-9b50-d2d6febe5046.jpg)
+![xrns2xmod_gui](https://github.com/01010111/xrns2xmod/blob/master/docs/images/Xrns2XMod_GUI.jpg?raw=true)
 
 The Xrns2XMod GUI is the windows interface to access all the Xrns2XMod features
 
@@ -140,28 +140,28 @@ The Xrns2XMod GUI is the windows interface to access all the Xrns2XMod features
 Download the Xrns2XMod Tool [here](http://www.renoise.com/tools/xrns2xmod)
 
 ## Menu
-![menu](https://user-images.githubusercontent.com/1042453/34800024-1ee6b4e0-f630-11e7-863a-24dba6d00393.jpg)
+![menu](https://github.com/01010111/xrns2xmod/blob/master/docs/images/menu.jpg?raw=true)
 
 With menu it is possible to access to windows or templates, demo or other Xrns2XMod stuff.
 Some menu may be disabled according to the context or if main application path is not set
 
 ## Control Panel
-![control_panel](https://user-images.githubusercontent.com/1042453/34800017-1e984648-f630-11e7-92e7-aa42a0d2ab23.jpg)
+![control_panel](https://github.com/01010111/xrns2xmod/blob/master/docs/images/control_panel.jpg?raw=true)
 
 With control panel it is possible to locate Xrns2XMod application path
 
 ## Converter
-![converter](https://user-images.githubusercontent.com/1042453/34800018-1ea18c1c-f630-11e7-9486-a199cef56572.jpg)
+![converter](https://github.com/01010111/xrns2xmod/blob/master/docs/images/converter.jpg?raw=true)
 
 Main window for converting and adjust specific conversion settings
 
 ## Helper
-![helper](https://user-images.githubusercontent.com/1042453/34800020-1eb64940-f630-11e7-890f-eb6f9bce69ae.jpg)
+![helper](https://github.com/01010111/xrns2xmod/blob/master/docs/images/helper.jpg?raw=true)
 
 Window that help user to set correct portamento/volume values without messing up with accuracy conversion
 
 ## Instrument Settings
-![instrument_settings](https://user-images.githubusercontent.com/1042453/34800021-1ec2ef92-f630-11e7-93f2-5c738a56ebbf.jpg)
+![instrument_settings](https://github.com/01010111/xrns2xmod/blob/master/docs/images/instrument_settings.jpg?raw=true)
 
 Assign sample's default volume and sample rate for each sample.
 
@@ -169,7 +169,7 @@ Default value for volume is 64, while the converted sample rate is the actual sa
 
 # Linux/Mac
 _Xrns2XMod Shell on Ubuntu platform_
-![screenshot from 2014-10-28 08-14-11](https://user-images.githubusercontent.com/1042453/34800029-1f1ca078-f630-11e7-809d-c0ddec50e3bd.png)
+![screenshot from 2014-10-28 08-14-11](https://github.com/01010111/xrns2xmod/blob/master/docs/images/Screenshot%20from%202014-10-28%2008-14-11.png?raw=true)
 
 To run Xrns2XModShell under Linux, you must install [Mono runtime](http://www.mono-project.com/docs/advanced/runtime/). Once mono runtime is correctly installed, download Xrns2XModShell.tar.gz file, copy zipped contents wherever you want and copy the *.so files located under "libs/[x64|x86]" directory (depending to your system's architecture) into Xrns2XModCmd root folder, then run _Xrns2XModShell.exe_ in the same way of Windows binary.
 
@@ -186,10 +186,10 @@ For this purpose, try the following:
 5) Open the [BASS site](http://www.un4seen.com/bass.html) and download bass.dylib, libbassflac.dylib, libbassmix.dylib, then copy these files into Xrns2XMod folder
 
 _MonoDevelop_  
-![screenshot from 2014-10-28 08-43-11](https://user-images.githubusercontent.com/1042453/34800030-1f2c70ac-f630-11e7-985e-de3e432c566f.png)
+![screenshot from 2014-10-28 08-43-11](https://github.com/01010111/xrns2xmod/blob/master/docs/images/Screenshot%20from%202014-10-28%2008-43-11.png?raw=true)
 
 _A screenshot on Linux platform_  
-![ubuntu](https://user-images.githubusercontent.com/1042453/34800031-1f35eea2-f630-11e7-87ae-cab2e0fff9bb.jpg)
+![ubuntu](https://github.com/01010111/xrns2xmod/blob/master/docs/images/ubuntu.jpg?raw=true)
 
 # Resources
 
@@ -201,7 +201,8 @@ _A screenshot on Linux platform_
 Look into Resources folder under executable folder
 
 ## Music
-Towards A New Decade.xrns a whole song, pro tracker convertible
-Lack of Time.xrns a pro tracker convertible module (read Song Comments before convert)
-Temple of the competitors (game version new).xrns a song written for an iPhone game, xm compatible
+[Towards A New Decade.xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Towards%20A%20New%20Decade.xrns) a whole song, pro tracker convertible
+[Lack of Time.xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Lack%20of%20Time.xrns) a pro tracker convertible module (read Song Comments before convert)
+[Temple of the competitors (game version new).xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Temple%20of%20the%20competitors%20(game%20version%20new).xrns) a song written for an [iPhone game](http://itunes.apple.com/us/app/twinflix-onlinetetrismino/id404432764?mt=8), xm compatible
+
 Last edited Apr 1, 2016 at 5:50 AM by Zenon66, version 115
