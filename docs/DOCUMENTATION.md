@@ -201,8 +201,8 @@ _A screenshot on Linux platform_
 Look into Resources folder under executable folder
 
 ## Music
-[Towards A New Decade.xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Towards%20A%20New%20Decade.xrns) a whole song, pro tracker convertible
-[Lack of Time.xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Lack%20of%20Time.xrns) a pro tracker convertible module (read Song Comments before convert)
+[Towards A New Decade.xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Towards%20A%20New%20Decade.xrns) a whole song, pro tracker convertible  
+[Lack of Time.xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Lack%20of%20Time.xrns) a pro tracker convertible module (read Song Comments before convert)  
 [Temple of the competitors (game version new).xrns](https://github.com/01010111/xrns2xmod/raw/master/docs/examples/Temple%20of%20the%20competitors%20(game%20version%20new).xrns) a song written for an [iPhone game](http://itunes.apple.com/us/app/twinflix-onlinetetrismino/id404432764?mt=8), xm compatible
 
 Last edited Apr 1, 2016 at 5:50 AM by Zenon66, version 115
