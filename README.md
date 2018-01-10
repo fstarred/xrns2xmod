@@ -1,4 +1,4 @@
-<div data-type="ad" data-publisher="fstarred.github.io" data-format="728x90" data-zone="yamp" data-tags="renoise%2cxm%2cmod%2cconverter"></div> 
+<div data-type="ad" data-publisher="fstarred.github.io" data-format="728x90" data-zone="xrns2xmod" data-tags="renoise%2cxm%2cmod%2cconverter"></div> 
 
 # Xrns2XMOD
 Xrns2XMOD is a Renoise to MOD / XM format converter
