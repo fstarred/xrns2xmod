@@ -3,6 +3,9 @@
 # Xrns2XMOD
 Xrns2XMOD is a Renoise to MOD / XM format converter
 
+### Wiki
+For documentation, check the [Wiki page](https://github.com/fstarred/xrns2xmod/wiki)
+
 ### Donation
 Xrns2XMOD is a freeware project that is developed in personal time. You can show your appreciation for this project and support future development by donating.
 
