@@ -115,7 +115,7 @@ namespace Xrns2XModCmd
 
                     // output file
                     if (string.IsNullOrEmpty(outputFile))
-                        outputFile = args[0].Remove(args[0].Length - 5); // default output file, same as input without .xrns extension
+                        outputFile = inputFile.Remove(inputFile.Length - 5); // default output file, same as input without .xrns extension
 
                     // destination format
                     destType = destType.ToLowerInvariant();
