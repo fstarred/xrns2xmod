@@ -14,10 +14,10 @@ namespace Xrns2XMod
         {
             string targetPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            if (Utils.Is64Bit)
-                targetPath = Path.Combine(targetPath, "libs/x64");
-            else
-                targetPath = Path.Combine(targetPath, "libs/x86");
+            //if (Utils.Is64Bit)
+            //    targetPath = Path.Combine(targetPath, "libs/x64");
+            //else
+            //    targetPath = Path.Combine(targetPath, "libs/x86");            
 
             if (!string.IsNullOrEmpty(bassEmail) && !string.IsNullOrEmpty(bassCode))
             {
@@ -26,9 +26,9 @@ namespace Xrns2XMod
 
             if (Utility.IsWindowsOS())
             {
-                Bass.LoadMe(targetPath);
-                BassMix.LoadMe(targetPath);
-                BassFlac.LoadMe(targetPath);
+                Bass.LoadMe();
+                BassMix.LoadMe();
+                BassFlac.LoadMe();
             }
 
             bool isBassInit = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, win);

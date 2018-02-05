@@ -105,9 +105,9 @@ namespace Xrns2XModCmd
                     {
                         inputFile = extra[0];
 
-                        if (Path.GetExtension(inputFile).Equals(".xrns") == false)
+                        if (!File.Exists(inputFile) || !Path.GetExtension(inputFile).Equals(".xrns", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            throw new ApplicationException("must specify an xrns input file");
+                            throw new ApplicationException("A valid xrns input file must be specified");
                         }
                     }
                     else
