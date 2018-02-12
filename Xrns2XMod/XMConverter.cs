@@ -645,7 +645,11 @@ namespace Xrns2XMod
                         {
                             int xmSample = xmUtils.GetPlayedSampleFromKeymap(xmNote, xmInstrument);                                                        
                             // figure out which sample will play for this.
-                            playingSamplesMap[currentChannel] = instruments[xmInstrument - 1].Samples[xmSample];
+                            if (instruments[xmInstrument - 1].Samples.Length > xmSample )
+                            {
+                                playingSamplesMap[currentChannel] = instruments[xmInstrument - 1].Samples[xmSample];
+                            }
+                            
                         }                        
                     }
                     
