@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Zip;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.XPath;
-using ICSharpCode.SharpZipLib.Zip;
 using Xrns2XMod;
 
 namespace Xrns2XModUI
