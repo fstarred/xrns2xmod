@@ -228,23 +228,23 @@ namespace Xrns2XMod
                         if (originalSample != null)
                         {
 
-                            int handleFlac = BassWrapper.GetFlacFromStream(originalSample);
+                            int handle = BassWrapper.GetHandleFromStream(originalSample);
 
-                            BASS_CHANNELINFO bassChannelInfo = BassWrapper.GetBassChannelInfo(handleFlac);
+                            BASS_CHANNELINFO bassChannelInfo = BassWrapper.GetBassChannelInfo(handle);
 
-                            long originalSampleLength = Bass.BASS_ChannelGetLength(handleFlac);
+                            long originalSampleLength = Bass.BASS_ChannelGetLength(handle);
 
-                            int mixer = BassWrapper.PlugChannelToMixer(handleFlac, bassChannelInfo.freq, bassChannelInfo.chans, bassChannelInfo.origres);
+                            int mixer = BassWrapper.PlugChannelToMixer(handle, bassChannelInfo.freq, bassChannelInfo.chans, bassChannelInfo.origres);
 
                             if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instrumentsData[ci].Samples[si].Volume != 1.0f)
                             {
                                 OnReportProgress(new EventReportProgressArgs(String.Format("Ramping sample volume to value {0}", instrumentsData[ci].Samples[si].Volume)));
-                                BassWrapper.AdjustSampleVolume(handleFlac, mixer, instrumentsData[ci].Samples[si].Volume);
+                                BassWrapper.AdjustSampleVolume(handle, mixer, instrumentsData[ci].Samples[si].Volume);
                             }
 
                             Stream stream = BassWrapper.GetXMEncodedSample(mixer, originalSampleLength, bassChannelInfo);
 
-                            Bass.BASS_StreamFree(handleFlac);
+                            Bass.BASS_StreamFree(handle);
 
                             Bass.BASS_StreamFree(mixer);
 

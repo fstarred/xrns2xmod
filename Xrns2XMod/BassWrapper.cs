@@ -39,7 +39,7 @@ namespace Xrns2XMod
         }
 
 
-        public static int GetFlacFromStream(Stream stream)
+        public static int GetHandleFromStream(Stream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
 
@@ -53,7 +53,7 @@ namespace Xrns2XMod
             _hGCFile = GCHandle.Alloc(buffer, GCHandleType.Pinned);
 
             // create the flac stream (AddrOfPinnedObject delivers the necessary IntPtr)            
-            int handle = BassFlac.BASS_FLAC_StreamCreateFile(_hGCFile.AddrOfPinnedObject(), 0L, length, BASSFlag.BASS_STREAM_DECODE);
+            int handle = Bass.BASS_StreamCreateFile(_hGCFile.AddrOfPinnedObject(), 0L, length, BASSFlag.BASS_STREAM_DECODE);
 
             return handle;
         }

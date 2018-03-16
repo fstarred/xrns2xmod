@@ -157,7 +157,7 @@ namespace Xrns2XModUI
 
                     if (stream != null)
                     {
-                        int handle = BassWrapper.GetFlacFromStream(stream);
+                        int handle = BassWrapper.GetHandleFromStream(stream);
 
                         instrumentFreq[ci][si] = BassWrapper.GetSampleFreq(handle);
 

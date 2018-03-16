@@ -42,16 +42,21 @@ namespace Xrns2XMod
         }
 
         /*
-         * return flac sample stream, otherwise returns null
+         * return sample stream, otherwise returns null
          * 
          * */
         public Stream GetSampleStream(int instrumentIndex, int sampleIndex)
         {
             Stream outputStream = null;
-            string regExp = "SampleData/Instrument" + instrumentIndex.ToString("00", CultureInfo.InvariantCulture) +
-                ".*/Sample" + sampleIndex.ToString("00", CultureInfo.InvariantCulture) + ".*\\.flac";
+            //string regExp = "SampleData/Instrument" + instrumentIndex.ToString("00", CultureInfo.InvariantCulture) +
+            //    ".*/Sample" + sampleIndex.ToString("00", CultureInfo.InvariantCulture) + ".*\\.flac";
 
-            Regex regPattern = new Regex(regExp);
+            string captureSampleRegExpr = String.Format(@"SampleData/Instrument{0}.*/Sample{1}.*\.(wav|aiff?|ogg|flac|mp3|aac)$",
+                    instrumentIndex.ToString("00", CultureInfo.InvariantCulture),
+                    sampleIndex.ToString("00", CultureInfo.InvariantCulture)
+                );
+
+            Regex regPattern = new Regex(captureSampleRegExpr);
 
             ZipFile zipFile = null;
 
@@ -61,15 +66,15 @@ namespace Xrns2XMod
 
                 string sampleFilename = null;
 
-                for (int i = 0; i < zipFile.Count; i++)
+                foreach (ZipEntry zip in zipFile)
                 {
-                    Match matchInst = regPattern.Match(zipFile[i].Name);
+                    Match matchInst = regPattern.Match(zip.Name);
 
                     sampleFilename = matchInst.Value;
 
                     if (matchInst.Success) break;
                 }
-
+                
                 if (!String.IsNullOrEmpty(sampleFilename))
                 {
                     ZipEntry zipEntry = zipFile.GetEntry(sampleFilename);
@@ -80,14 +85,19 @@ namespace Xrns2XMod
                     {
                         if (stream != null)
                         {
-                            stream.BaseStream.Position = 0;
-
                             stream.BaseStream.CopyTo(outputStream);
                         }
                     }
-
-                    
                 }
+                else
+                {
+                    // Sample not found!
+                    System.Diagnostics.Debug.WriteLine("No sample caught!");
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
             }
             finally
             {
