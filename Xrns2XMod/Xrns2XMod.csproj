@@ -94,10 +94,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RenoiseSong63.cs" />
+    <Compile Include="SampleStreamInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsBase.cs" />
     <Compile Include="SongDataFactory.cs" />
     <Compile Include="SongStruct.cs" />
+    <Compile Include="StreamBassFactory.cs" />
     <Compile Include="XMExtras.cs" />
     <Compile Include="BassWrapper.cs" />
     <Compile Include="Utility.cs" />

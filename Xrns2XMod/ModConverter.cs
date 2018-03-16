@@ -193,7 +193,7 @@ namespace Xrns2XMod
                     if (originalSample != null)
                     {
 
-                        int handleFlac = BassWrapper.GetHandleFromStream(originalSample);
+                        int handleFlac = BassWrapper.GetFlacStream(originalSample);
 
                         BASS_CHANNELINFO bassChannelInfo = BassWrapper.GetBassChannelInfo(handleFlac);
 

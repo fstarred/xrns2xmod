@@ -41,22 +41,24 @@ namespace Xrns2XMod
             }
         }
 
-        /*
-         * return sample stream, otherwise returns null
-         * 
-         * */
-        public Stream GetSampleStream(int instrumentIndex, int sampleIndex)
+        /// <summary>
+        /// return sample stream with audio format info
+        /// </summary>
+        /// <param name="instrumentIndex"></param>
+        /// <param name="sampleIndex"></param>
+        /// <returns></returns>
+        public SampleStreamInfo GetSampleStreamInfo(int instrumentIndex, int sampleIndex)
         {
+            SampleStreamInfo output = new SampleStreamInfo();
+
             Stream outputStream = null;
-            //string regExp = "SampleData/Instrument" + instrumentIndex.ToString("00", CultureInfo.InvariantCulture) +
-            //    ".*/Sample" + sampleIndex.ToString("00", CultureInfo.InvariantCulture) + ".*\\.flac";
 
             string captureSampleRegExpr = String.Format(@"SampleData/Instrument{0}.*/Sample{1}.*\.(wav|aiff?|ogg|flac|mp3|aac)$",
                     instrumentIndex.ToString("00", CultureInfo.InvariantCulture),
                     sampleIndex.ToString("00", CultureInfo.InvariantCulture)
                 );
 
-            Regex regPattern = new Regex(captureSampleRegExpr);
+            Regex regPattern = new Regex(captureSampleRegExpr, RegexOptions.IgnoreCase);
 
             ZipFile zipFile = null;
 
@@ -74,7 +76,7 @@ namespace Xrns2XMod
 
                     if (matchInst.Success) break;
                 }
-                
+
                 if (!String.IsNullOrEmpty(sampleFilename))
                 {
                     ZipEntry zipEntry = zipFile.GetEntry(sampleFilename);
@@ -86,6 +88,15 @@ namespace Xrns2XMod
                         if (stream != null)
                         {
                             stream.BaseStream.CopyTo(outputStream);
+
+                            output.Stream = outputStream;
+
+                            string extension = Path.GetExtension(sampleFilename).Substring(1);
+
+                            if (extension.Equals("aif", StringComparison.InvariantCultureIgnoreCase))
+                                extension = "aiff";
+
+                            output.Format = (FORMAT)Enum.Parse(typeof(FORMAT), extension.ToUpper());
                         }
                     }
                 }
@@ -95,7 +106,7 @@ namespace Xrns2XMod
                     System.Diagnostics.Debug.WriteLine("No sample caught!");
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }
@@ -103,9 +114,20 @@ namespace Xrns2XMod
             {
                 if (zipFile != null)
                     zipFile.Close();
-            }
+            }            
 
-            return outputStream;
+            return output;
+        }
+
+        /// <summary>
+        /// return stream sample, otherwise null
+        /// </summary>
+        /// <param name="instrumentIndex"></param>
+        /// <param name="sampleIndex"></param>
+        /// <returns></returns>
+        public Stream GetSampleStream(int instrumentIndex, int sampleIndex)
+        {
+            return GetSampleStreamInfo(instrumentIndex, sampleIndex).Stream;
         }        
 
         public bool DowngradeSong(bool replaceZKCommand)

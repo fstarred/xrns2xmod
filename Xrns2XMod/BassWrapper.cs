@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Un4seen.Bass;
+using Un4seen.Bass.AddOn.Aac;
 using Un4seen.Bass.AddOn.Flac;
 using Un4seen.Bass.AddOn.Mix;
 
@@ -29,6 +30,7 @@ namespace Xrns2XMod
                 Bass.LoadMe();
                 BassMix.LoadMe();
                 BassFlac.LoadMe();
+                BassAac.LoadMe();
             }
 
             bool isBassInit = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, win);
@@ -38,8 +40,58 @@ namespace Xrns2XMod
 
         }
 
+        public static int GetBassStream(SampleStreamInfo input)
+        {
+            int handle;
 
-        public static int GetHandleFromStream(Stream stream)
+            Stream stream = input.Stream;
+
+            stream.Seek(0, System.IO.SeekOrigin.Begin);
+
+            byte[] buffer = Utility.GetBytesFromStream(stream, stream.Length);
+
+            long length = buffer.Length;
+
+            GCHandle _hGCFile;
+
+            // now create a pinned handle, so that the Garbage Collector will not move this object
+            _hGCFile = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+
+            Func<IntPtr, long, long, BASSFlag, int> actionStreamCreateFile;
+
+            switch (input.Format)
+            {
+                case FORMAT.WAV:
+                case FORMAT.AIFF:
+                case FORMAT.MP3:
+                case FORMAT.OGG:
+                    actionStreamCreateFile = Bass.BASS_StreamCreateFile;
+                    break;
+                case FORMAT.FLAC:
+                    actionStreamCreateFile = BassFlac.BASS_FLAC_StreamCreateFile;                    
+                    break;
+                case FORMAT.AAC:
+                    actionStreamCreateFile = BassAac.BASS_AAC_StreamCreateFile;                    
+                    break;
+                default:
+                    actionStreamCreateFile = null;
+                    break;
+            }
+
+            if (actionStreamCreateFile != null)
+            { 
+                handle = actionStreamCreateFile(_hGCFile.AddrOfPinnedObject(), 0L, length, BASSFlag.BASS_STREAM_DECODE);
+            }
+            else
+            {
+                handle = Bass.FALSE;
+            }
+
+            return handle;
+        }
+
+        [Obsolete("Use GetBassStream instead")]
+        public static int GetFlacStream(Stream stream)
         {
             stream.Seek(0, SeekOrigin.Begin);
 
@@ -53,25 +105,11 @@ namespace Xrns2XMod
             _hGCFile = GCHandle.Alloc(buffer, GCHandleType.Pinned);
 
             // create the flac stream (AddrOfPinnedObject delivers the necessary IntPtr)            
-            int handle = Bass.BASS_StreamCreateFile(_hGCFile.AddrOfPinnedObject(), 0L, length, BASSFlag.BASS_STREAM_DECODE);
+            int handle = BassFlac.BASS_FLAC_StreamCreateFile(_hGCFile.AddrOfPinnedObject(), 0L, length, BASSFlag.BASS_STREAM_DECODE);
 
             return handle;
         }
-
-        // useless ?
-        public static int GetWavHandleFromFlac(int handle)
-        {
-            BASS_CHANNELINFO bassChannelInfo = GetBassChannelInfo(handle);
-
-            BASSFlag bassFlag = BASSFlag.BASS_STREAM_DECODE;
-
-            if (bassChannelInfo.origres == 8)
-                bassFlag |= BASSFlag.BASS_SAMPLE_8BITS;
-
-            int handleWav = Bass.BASS_StreamCreate(bassChannelInfo.freq, bassChannelInfo.chans, bassFlag, BASSStreamProc.STREAMPROC_DUMMY);
-
-            return handleWav;
-        }
+        
 
         public static Stream GetXMEncodedSample(int handle, long sampleLength, BASS_CHANNELINFO bassChannelInfo)
         {
