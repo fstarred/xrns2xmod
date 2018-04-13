@@ -99,7 +99,6 @@
     <Compile Include="SettingsBase.cs" />
     <Compile Include="SongDataFactory.cs" />
     <Compile Include="SongStruct.cs" />
-    <Compile Include="StreamBassFactory.cs" />
     <Compile Include="XMExtras.cs" />
     <Compile Include="BassWrapper.cs" />
     <Compile Include="Utility.cs" />

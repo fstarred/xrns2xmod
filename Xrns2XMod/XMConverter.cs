@@ -227,12 +227,20 @@ namespace Xrns2XMod
                         if (sampleStreamInfo.Stream != null)
                         {
                             int handle = BassWrapper.GetBassStream(sampleStreamInfo);
-
+                            
                             BASS_CHANNELINFO bassChannelInfo = BassWrapper.GetBassChannelInfo(handle);
 
-                            long originalSampleLength = Bass.BASS_ChannelGetLength(handle);
+                            int origres = bassChannelInfo.origres;
 
-                            int mixer = BassWrapper.PlugChannelToMixer(handle, bassChannelInfo.freq, bassChannelInfo.chans, bassChannelInfo.origres);
+                            if (origres == 0) // some streams were reported to return undefinied resolution
+                            {
+                                OnReportProgress(new EventReportProgressArgs("Sample bps detection failed, assuming 16 bits by default", MsgType.WARNING));
+                                origres = 16;
+                            }                                
+
+                            long originalSampleLength = Bass.BASS_ChannelGetLength(handle);
+                            
+                            int mixer = BassWrapper.PlugChannelToMixer(handle, bassChannelInfo.freq, bassChannelInfo.chans, origres);
 
                             if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instrumentsData[ci].Samples[si].Volume != 1.0f)
                             {
@@ -240,7 +248,7 @@ namespace Xrns2XMod
                                 BassWrapper.AdjustSampleVolume(handle, mixer, instrumentsData[ci].Samples[si].Volume);
                             }
 
-                            Stream stream = BassWrapper.GetXMEncodedSample(mixer, originalSampleLength, bassChannelInfo);
+                            Stream stream = BassWrapper.GetXMEncodedSample(mixer, originalSampleLength, bassChannelInfo.chans, origres);
 
                             Bass.BASS_StreamFree(handle);
 
@@ -248,7 +256,7 @@ namespace Xrns2XMod
 
                             encodedSample[si] = stream;
 
-                            bps = (byte)(bassChannelInfo.origres > 8 ? 16 : 8);
+                            bps = (byte)(origres > 8 ? 16 : 8);
 
                             chans = bassChannelInfo.chans;
 

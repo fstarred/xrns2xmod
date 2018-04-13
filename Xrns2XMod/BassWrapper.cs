@@ -40,6 +40,11 @@ namespace Xrns2XMod
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public static int GetBassStream(SampleStreamInfo input)
         {
             int handle;
@@ -71,22 +76,14 @@ namespace Xrns2XMod
                     actionStreamCreateFile = BassFlac.BASS_FLAC_StreamCreateFile;                    
                     break;
                 case FORMAT.AAC:
-                    actionStreamCreateFile = BassAac.BASS_AAC_StreamCreateFile;                    
-                    break;
+                    //actionStreamCreateFile = BassAac.BASS_AAC_StreamCreateFile;
+                    throw new NotImplementedException("AAC extension not supported");                    
                 default:
-                    actionStreamCreateFile = null;
-                    break;
+                    throw new NotImplementedException("Sample sxtension is not supported");
             }
 
-            if (actionStreamCreateFile != null)
-            { 
-                handle = actionStreamCreateFile(_hGCFile.AddrOfPinnedObject(), 0L, length, BASSFlag.BASS_STREAM_DECODE);
-            }
-            else
-            {
-                handle = Bass.FALSE;
-            }
-
+            handle = actionStreamCreateFile(_hGCFile.AddrOfPinnedObject(), 0L, length, BASSFlag.BASS_STREAM_DECODE);
+            
             return handle;
         }
 
@@ -111,23 +108,23 @@ namespace Xrns2XMod
         }
         
 
-        public static Stream GetXMEncodedSample(int handle, long sampleLength, BASS_CHANNELINFO bassChannelInfo)
+        public static Stream GetXMEncodedSample(int handle, long sampleLength, int chans, int bps)
         {
             byte[] rawDataBuffer = new byte[sampleLength];
 
             // retrieve raw data of the source on byte[]
             int channelTotalData = Bass.BASS_ChannelGetData(handle, rawDataBuffer, (int)sampleLength);
 
-            if (bassChannelInfo.origres == 8)
+            if (bps == 8)
             {
-                if (bassChannelInfo.chans == 2)
+                if (chans == 2)
                     return AudioEncUtil.EncodeDelta8BitStereoSample(rawDataBuffer);
                 else
                     return AudioEncUtil.EncodeDelta8BitMonoSample(rawDataBuffer);
             }
             else
             {
-                if (bassChannelInfo.chans == 2)
+                if (chans == 2)
                     return AudioEncUtil.EncodeDelta16BitStereoSample(rawDataBuffer);
                 else
                     return AudioEncUtil.EncodeDelta16BitMonoSample(rawDataBuffer);
@@ -136,7 +133,9 @@ namespace Xrns2XMod
 
         public static BASS_CHANNELINFO GetBassChannelInfo(int handle)
         {
-            return Bass.BASS_ChannelGetInfo(handle);
+            BASS_CHANNELINFO output = Bass.BASS_ChannelGetInfo(handle);
+
+            return output;
         }
 
         public static int GetSampleFreq(int handle)
@@ -226,8 +225,7 @@ namespace Xrns2XMod
             bool isMixerGood = BassMix.BASS_Mixer_StreamAddChannel(mixer, handle, BASSFlag.BASS_MIXER_NORAMPIN);
 
             return mixer;
-        }
-
+        }        
 
         public static void FreeResources()
         {

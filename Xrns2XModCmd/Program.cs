@@ -317,6 +317,8 @@ namespace Xrns2XModCmd
 
                     IConverter converter = null;
 
+                    Console.Write(Environment.NewLine);
+
                     Console.WriteLine("File is ok, now it's time to convert.");
 
                     Console.WriteLine("{0} conversion has started... please wait ", destType);
@@ -373,14 +375,16 @@ namespace Xrns2XModCmd
 
                     output = converter.Convert(songData);
 
-                    outputFile = Path.Combine(Path.GetDirectoryName(outputFile), Path.GetFileNameWithoutExtension(outputFile));
+                    //outputFile = Path.Combine(Path.GetDirectoryName(outputFile), Path.GetFileNameWithoutExtension(outputFile));
 
-                    string outputFileExt = Path.GetExtension(outputFile);
+                    outputFile = System.Text.RegularExpressions.Regex.Match(outputFile, @"(?:(?!\.(mod|xm)$).)*").Value;
+
+                    string outputFileExt = System.Text.RegularExpressions.Regex.Match(outputFile, @"\.(mod | xm)$").Value;
 
                     // add extension to output file in case user has not already specified it
-                    if (outputFileExt.Equals("." + destType, StringComparison.CurrentCultureIgnoreCase) == false)
+                    if (!outputFileExt.Equals("." + destType, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        outputFile += "." + destType;
+                        outputFile += '.' + destType;
                     }
 
                     Utility.Save2File(outputFile, output);

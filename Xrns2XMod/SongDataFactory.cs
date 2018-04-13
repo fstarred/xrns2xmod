@@ -231,9 +231,14 @@ namespace Xrns2XMod
         {
             IniWrapper iniWrapper = new IniWrapper(inputFile, false);
 
+            OnReportProgress(new EventReportProgressArgs(String.Format("Looking on ini path: {0}{1}", Environment.NewLine, iniWrapper.IniPath),  MsgType.INFO));
+
+            string message = String.Format("Song configuration {0} found", iniWrapper.IsIniLoad ? String.Empty : "not");
+
+            OnReportProgress(new EventReportProgressArgs(message, MsgType.INFO));
+
             if (iniWrapper.IsIniLoad)
-            {
-                OnReportProgress(new EventReportProgressArgs("loading song configuration...", MsgType.INFO));
+            {                
                 for (int ci = 0; ci < songData.NumInstruments; ci++)
                 {
                     for (int si = 0; si < songData.Instruments[ci].Samples.Length; si++)
