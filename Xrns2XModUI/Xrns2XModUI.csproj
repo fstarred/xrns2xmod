@@ -243,7 +243,6 @@
     <Content Include="Resource\volume.png" />
     <Content Include="Resource\world.png" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Xrns2XMod\Xrns2XMod.csproj">
       <Project>{ab5ff1dc-ea99-4c7a-a980-ad51fbd2b502}</Project>
