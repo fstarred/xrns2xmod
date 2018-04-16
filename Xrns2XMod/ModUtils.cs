@@ -761,8 +761,9 @@ namespace Xrns2XMod
                 case '6':
                 case '7':
                 case '8': // Set panning of current note column: (00 = full left, 40 = center, 80 = full right).
-                    int hexVal = Int16.Parse(xrnsColPanEff, System.Globalization.NumberStyles.HexNumber);
-                    ret = modCommands.TransposeSetPanningFromPanning(value);
+                    // int hexVal = Int16.Parse(xrnsColPanEff, System.Globalization.NumberStyles.HexNumber);
+                    // ret = modCommands.TransposeSetPanningFromPanning(hexVal);
+                    // NOTE: this effect is not more converted because MOD envolve whole channel whereas XRNS does only the current note
                     break;
                 case 'J': //  Panning slide left with step x (0 - F).                    
                     break;
