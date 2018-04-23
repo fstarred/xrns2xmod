@@ -29,7 +29,7 @@ namespace Xrns2XMod
 
         public IniWrapper(string xrnsFile, bool forceCreateIni)
         {
-            Assembly assembly = Assembly.GetEntryAssembly();
+            Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
             string iniPath = Path.Combine(Path.GetDirectoryName(assembly.Location), "ini", Path.GetFileNameWithoutExtension(xrnsFile) + ".ini");
             this.IniPath = iniPath;
             bool iniExists = File.Exists(iniPath);
