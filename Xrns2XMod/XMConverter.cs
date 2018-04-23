@@ -223,8 +223,9 @@ namespace Xrns2XMod
                         //Stream originalSample = xrnsManager.GetSampleStream(ci, si);
 
                         SampleStreamInfo sampleStreamInfo = xrnsManager.GetSampleStreamInfo(ci, si);
-                        
-                        if (sampleStreamInfo.Stream != null)
+
+                        // means sample is probably empty
+                        if (sampleStreamInfo.Format != FORMAT.NONE)
                         {
                             int handle = BassWrapper.GetBassStream(sampleStreamInfo);
                             

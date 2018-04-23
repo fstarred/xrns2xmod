@@ -190,7 +190,7 @@ namespace Xrns2XMod
                     //Stream originalSample = xrnsReader.GetInstrumentSample(ci, 0);
 
                     // means sample is probably empty
-                    if (originalSample != null)
+                    if (originalSample.Format != FORMAT.NONE)
                     {
                         int handle = BassWrapper.GetBassStream(originalSample);
 
