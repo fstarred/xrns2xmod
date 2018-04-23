@@ -387,7 +387,7 @@ namespace Xrns2XModCmd
                         outputFile += '.' + destType;
                     }
 
-                    Utility.Save2File(outputFile, output);
+                    Utility.SaveByteArrayToFile(outputFile, output);
 
                     TimeSpan ts = DateTime.Now.Subtract(dtStart);
 
