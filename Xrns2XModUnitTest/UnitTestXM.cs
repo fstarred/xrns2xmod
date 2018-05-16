@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Linq;
 using System.Reflection;
 using Xrns2XMod;
@@ -7,11 +7,11 @@ using Xrns2XMod;
 namespace Xrns2XModUnitTest
 {
     [TestClass]
-    public class UnitTestMod
+    public class UnitTestXM
     {
         SongDataFactory songDataFactory;
-        ModSettings settings;
-        ModConverter converter;
+        XmSettings settings;
+        XMConverter converter;
         SongData songData;
 
         public TestContext TestContext { get; set; }
@@ -19,7 +19,7 @@ namespace Xrns2XModUnitTest
         [ClassInitialize]
         public static void ClassInitialize(TestContext ctx)
         {
-            ctx.WriteLine("Initializing MOD Unit Test class");
+            ctx.WriteLine("Initializing XM Unit Test class");
             BassWrapper.InitResources(IntPtr.Zero, null, null);
         }
 
@@ -32,8 +32,8 @@ namespace Xrns2XModUnitTest
         [TestInitialize]
         public void InitializeMethod()
         {
-            songDataFactory = new SongDataFactory();
-            
+            songDataFactory = new SongDataFactory();            
+
             string theClassName = TestContext.FullyQualifiedTestClassName;
             string testName = TestContext.TestName;
 
@@ -54,13 +54,11 @@ namespace Xrns2XModUnitTest
             string input = this.TestContext.Properties["resource_path"].ToString() + resourceAttribute.Path;
             RenoiseSong renoiseSong = songDataFactory.ExtractRenoiseSong(input);
             songData = songDataFactory.ExtractSongData(renoiseSong, input);
-            converter = new ModConverter(input);
+            converter = new XMConverter(input);
 
-            settings = new ModSettings();
-            settings.ForceProTrackerCompatibility = true;
-            settings.PortamentoLossThreshold = 2;
-            settings.VolumeScalingMode = VOLUME_SCALING_MODE.SAMPLE;
-
+            settings = new XmSettings();
+            settings.Tempo = songData.InitialBPM;
+            settings.TicksRow = songData.TicksPerLine;
             converter.Settings = settings;
         }
 
@@ -72,7 +70,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("2e36279920d991ad20241d5812f035bd", output);
+            Assert.AreEqual("52e02bc86985f0f83435aca9ee62efe5", output);
         }
 
         [Resource("test_default_volume.xrns")]
@@ -83,7 +81,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("8a04aaaa005b76f33f145f5ba61200ed", output);
+            Assert.AreEqual("6774ec1c292beece37a04fc17ac2e45a", output);
         }
 
         [Resource("test_delay_column.xrns")]
@@ -94,7 +92,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("34a34fcf4fb6bf036c298a773102101a", output);
+            Assert.AreEqual("f67a94b3a54bae37d663c05ff4502001", output);
         }
 
         [Resource("test_fade_volume_compatibility_trick.xrns")]
@@ -105,8 +103,9 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("435ada05f16686e29198a963e276fb8f", output);
+            Assert.AreEqual("0c79bbb58ff4a8e9e1a4c958c6dacd27", output);
         }
+
 
         [Resource("test_ft2_mode.xrns")]
         [TestMethod]
@@ -116,8 +115,9 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("48a7a50abfd384b5ed318c940be623e6", output);
+            Assert.AreEqual("1a8ecc9dee9a3678ee4224cc9c346430", output);
         }
+
 
         [Resource("test_global_commands.xrns")]
         [TestMethod]
@@ -127,7 +127,40 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("433db7eaf631d2a3c6b2172518ee8442", output);
+            Assert.AreEqual("fc1c3b52e9d722901670049401320e93", output);
+        }
+
+        [Resource("test_global_volume_xm_commands.xrns")]
+        [TestMethod]
+        public void GlobalVolumeXmCommands()
+        {
+            byte[] bytes = converter.Convert(songData);
+
+            string output = MD5Utils.GenerateMd5Hash(bytes);
+
+            Assert.AreEqual("ae1df1b1cf5a16a7d35cc20624d7fe51", output);
+        }
+
+        [Resource("test_instrument_envelopes.xrns")]
+        [TestMethod]
+        public void InstrumentEnvelopes()
+        {
+            byte[] bytes = converter.Convert(songData);
+
+            string output = MD5Utils.GenerateMd5Hash(bytes);
+
+            Assert.AreEqual("7c741e1f44514bc4a94b90bc0849d54e", output);
+        }
+
+        [Resource("test_instrument_keymap.xrns")]
+        [TestMethod]
+        public void InstrumentKeymap()
+        {
+            byte[] bytes = converter.Convert(songData);
+
+            string output = MD5Utils.GenerateMd5Hash(bytes);
+
+            Assert.AreEqual("5e746efcc1493974a218b1ede021dde7", output);
         }
 
         [Resource("test_instruments_commands.xrns")]
@@ -138,18 +171,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("fe95f07432539b31e25446863e22f4e7", output);
-        }
-
-        [Resource("test_mod_sample_conversion.xrns")]
-        [TestMethod]
-        public void ModSampleConversion()
-        {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("56c9c667a857b823411cea57edaf12cf", output);
+            Assert.AreEqual("3c450c54fa62f6e7a00a6587203c2988", output);
         }
 
         [Resource("test_multi_columns.xrns")]
@@ -160,7 +182,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("2c7591e96f820b08b2f3ce3ab5c3a7a2", output);
+            Assert.AreEqual("aacd817279de9c55add5f4a5f05736cf", output);
         }
 
         [Resource("test_panning_column.xrns")]
@@ -171,7 +193,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("20646321e170f66f1933d69f074fc829", output);
+            Assert.AreEqual("4107eed8586d6b0395fa03570ead5a74", output);
         }
 
         [Resource("test_renoise_standard_tpl_mode.xrns")]
@@ -182,7 +204,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("341120418fdbcaf06bd46bef7c0c9844", output);
+            Assert.AreEqual("a9cf4bb798ba9d472021a8a8bca598ae", output);
         }
 
         [Resource("test_sample_commands.xrns")]
@@ -193,7 +215,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("4ad75feec9349ffc6f26d25c7d89392e", output);
+            Assert.AreEqual("0d559b8c089e83e3788e4d95d5d877fd", output);
         }
 
         [Resource("test_tick_commands.xrns")]
@@ -204,7 +226,7 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("0d4e432d6d758463713ee637db6ecbec", output);
+            Assert.AreEqual("513cab45a102ac003cd754a54c8ef14a", output);
         }
 
         [Resource("test_volume_column.xrns")]
@@ -215,7 +237,20 @@ namespace Xrns2XModUnitTest
 
             string output = MD5Utils.GenerateMd5Hash(bytes);
 
-            Assert.AreEqual("83057508c6d46bdac9b588998a6a5252", output);
-        }        
+            Assert.AreEqual("c89468b202520aa6dfec2224cfdffedc", output);
+        }
+
+        [Resource("test_volume_scaling_mode.xrns")]
+        [TestMethod]
+        public void VolumeScalingMode()
+        {
+            converter.Settings.VolumeScalingMode = VOLUME_SCALING_MODE.COLUMN;
+
+            byte[] bytes = converter.Convert(songData);
+
+            string output = MD5Utils.GenerateMd5Hash(bytes);
+
+            Assert.AreEqual("04f4ae7c82e87c5382c28fc1ef438600", output);            
+        }
     }
 }
