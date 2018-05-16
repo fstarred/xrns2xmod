@@ -29,16 +29,88 @@ namespace Xrns2XMod
             return new byte[] { 0x21, 0x9F };
         }
 
-        /*
-         * Multi retrig Syntax: R + Interval + Volume change This is an extended version of the retrig command. 
-         * Volume change: 0 = None 8 = Unused 1 = -1 9 = +1 2 = -2 A = +2 3 = -4 B = +4 4 = -8 C = +8 5 = -16 
-         * D = +16 6 = *2/3 E = *3/2 7 = *1/2 F = *2 3.22 Tremor Syntax: T + On time + O
-         * */
+        /*         
+            XM Syntax: 
+          
+                R + Interval + Volume change
+                This is an extended version of the retrig command.  
+
+            Volume change:
+                0 = None    8 = Unused
+                1 = -1      9 = +1
+                2 = -2      A = +2
+                3 = -4      B = +4
+                4 = -8      C = +8
+                5 = -16     D = +16
+                6 = *2/3    E = *3/2
+                7 = *1/2    F = *2 
+                    
+            Renoise Syntax:  
+                
+            Retrigger instruments that are currently playing. 
+                This is done every y ticks with volume factor x applied to each retrigger, where x represents: 
+            
+            Volume change:
+                0 - No volume change                        8 - No volume change
+                1 - Lower volume by 3%                      9 - Raise volume by 3%
+                2 - Lower volume by 6%                      A - Raise volume by 6%
+                3 - Lower volume by 12%                     B - Raise volume by 12%
+                4 - Lower volume by 25%                     C - Raise volume by 25%
+                5 - Lower volume by 50%                     D - Raise volume by 50%
+                6 - Cumulatively lower volume by 33%        E - Cumulatively raise volume by 50%
+                7 - Cumulatively lower volume by 50%        F - Cumulatively raise volume by 100%                 
+
+            Conversion value table (XM / Renoise)                
+                0 - 0   8 - 0
+                1 - 1   9 - 9
+                2 - 3   A - B
+                3 - 4   B - C
+                4 - 5   C - D
+                5 - 7   D - F
+                6 - 6   E - E
+                7 - 7   F - F
+
+        */
         public byte[] MultiRetrig(int effVal)
         {
             byte[] ret = new byte[2];
             ret[0] = (byte)0x1B;
-            ret[1] = (byte)effVal;
+
+            int volumeValue = (effVal & 0xF0) >> 4;
+            int ticksValue = (effVal & 0x0F);
+            int convertedVolumeValue;
+
+            switch (volumeValue)
+            {
+                case 0:
+                case 1:
+                case 6:
+                case 7:
+                case 9:
+                case 0x0E:
+                case 0x0F:
+                    convertedVolumeValue = volumeValue;
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                case 0x0A:
+                case 0x0B:
+                case 0x0C:
+                    convertedVolumeValue = volumeValue + 1;
+                    break;
+                case 5:
+                case 0x0D:
+                    convertedVolumeValue = volumeValue + 2;
+                    break;
+                case 8:
+                    convertedVolumeValue = 0;
+                    break;
+                default:
+                    throw new InvalidOperationException("never thrown");
+            }
+
+            ret[1] = (byte)((convertedVolumeValue << 4) + ticksValue);
             return ret;
         }
 

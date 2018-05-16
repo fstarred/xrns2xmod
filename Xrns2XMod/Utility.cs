@@ -190,7 +190,7 @@ namespace Xrns2XMod
             }
         }
 
-        public static void Save2File(string fileName, byte[] inputStream)
+        public static void SaveByteArrayToFile(string fileName, byte[] inputStream)
         {
             FileStream fileStreamToWrite = File.OpenWrite(fileName);
             fileStreamToWrite.Write(inputStream, 0, inputStream.Length);
