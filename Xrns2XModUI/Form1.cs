@@ -352,7 +352,7 @@ namespace Xrns2XModUI
 
             bw.ReportProgress(99, "Writing output file..");
 
-            Utility.Save2File(bwArgs.FileName, (byte[])e.Result);
+            Utility.SaveByteArrayToFile(bwArgs.FileName, (byte[])e.Result);
         }
 
         private byte[] ParseModule(FileType fileType, BackgroundWorker worker, DoWorkEventArgs e)

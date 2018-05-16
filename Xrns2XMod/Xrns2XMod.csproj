@@ -94,6 +94,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RenoiseSong63.cs" />
+    <Compile Include="SampleStreamInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsBase.cs" />
     <Compile Include="SongDataFactory.cs" />
@@ -113,7 +114,6 @@
     <Content Include="ini\README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="README.txt" />
     <Content Include="specifications\mod-spec.txt" />
     <Content Include="specifications\Protracker_Module_Format.txt" />
   </ItemGroup>

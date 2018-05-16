@@ -185,19 +185,26 @@ namespace Xrns2XMod
 
                 try
                 {
-                    Stream originalSample = xrnsManager.GetSampleStream(ci, 0);
+                    SampleStreamInfo originalSample = xrnsManager.GetSampleStreamInfo(ci, 0);
 
                     //Stream originalSample = xrnsReader.GetInstrumentSample(ci, 0);
 
                     // means sample is probably empty
-                    if (originalSample != null)
+                    if (originalSample.Format != FORMAT.NONE)
                     {
+                        int handle = BassWrapper.GetBassStream(originalSample);
 
-                        int handleFlac = BassWrapper.GetFlacFromStream(originalSample);
+                        BASS_CHANNELINFO bassChannelInfo = BassWrapper.GetBassChannelInfo(handle);
 
-                        BASS_CHANNELINFO bassChannelInfo = BassWrapper.GetBassChannelInfo(handleFlac);
+                        int origres = bassChannelInfo.origres;
 
-                        long sampleLength = Bass.BASS_ChannelGetLength(handleFlac);
+                        if (origres == 0) // some streams were reported to return undefinied resolution
+                        {
+                            OnReportProgress(new EventReportProgressArgs("Sample bps detection failed, assuming 8 bits by default", MsgType.WARNING));
+                            origres = 8;
+                        }
+
+                        long sampleLength = Bass.BASS_ChannelGetLength(handle);
 
                         // samplerate may be:
                         // 1) same as original
@@ -215,23 +222,23 @@ namespace Xrns2XMod
                             sampleRate = bassChannelInfo.freq;
                         
 
-                        int mixer = BassWrapper.PlugChannelToMixer(handleFlac, sampleRate, 1, 8);
+                        int mixer = BassWrapper.PlugChannelToMixer(handle, sampleRate, 1, 8);
 
                         if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instruments[ci].Samples[0].Volume != 1.0f)
                         {
                             OnReportProgress(new EventReportProgressArgs(String.Format("Ramping sample volume to value {0}", instruments[ci].Samples[0].Volume)));
-                            BassWrapper.AdjustSampleVolume(handleFlac, mixer, instruments[ci].Samples[0].Volume);
+                            BassWrapper.AdjustSampleVolume(handle, mixer, instruments[ci].Samples[0].Volume);
                         }
 
                         Stream stream = BassWrapper.GetModEncodedSample(mixer, sampleLength, Settings.ForceProTrackerCompatibility);
 
-                        Bass.BASS_StreamFree(handleFlac);
+                        Bass.BASS_StreamFree(handle);
 
                         Bass.BASS_StreamFree(mixer);
 
                         int originalChans = bassChannelInfo.chans;
 
-                        int originalBps = bassChannelInfo.origres;
+                        int originalBps = origres;
 
                         modUtils.StoreSampleInfo(ci, (int)sampleLength, (int)stream.Length, sampleRate, originalChans, originalBps, 
                             instruments[ci].Samples[0].RelNoteNumber, instruments[ci].Samples[0].FineTune, instruments[ci].Samples[0].Transpose);

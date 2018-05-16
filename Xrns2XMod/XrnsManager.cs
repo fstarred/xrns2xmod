@@ -41,17 +41,24 @@ namespace Xrns2XMod
             }
         }
 
-        /*
-         * return flac sample stream, otherwise returns null
-         * 
-         * */
-        public Stream GetSampleStream(int instrumentIndex, int sampleIndex)
+        /// <summary>
+        /// return sample stream with audio format info
+        /// </summary>
+        /// <param name="instrumentIndex"></param>
+        /// <param name="sampleIndex"></param>
+        /// <returns></returns>
+        public SampleStreamInfo GetSampleStreamInfo(int instrumentIndex, int sampleIndex)
         {
-            Stream outputStream = null;
-            string regExp = "SampleData/Instrument" + instrumentIndex.ToString("00", CultureInfo.InvariantCulture) +
-                ".*/Sample" + sampleIndex.ToString("00", CultureInfo.InvariantCulture) + ".*\\.flac";
+            SampleStreamInfo output = new SampleStreamInfo();
 
-            Regex regPattern = new Regex(regExp);
+            Stream outputStream = null;
+
+            string captureSampleRegExpr = String.Format(@"SampleData/Instrument{0}.*/Sample{1}.*\.(wav|aiff?|ogg|flac|mp3|aac)$",
+                    instrumentIndex.ToString("00", CultureInfo.InvariantCulture),
+                    sampleIndex.ToString("00", CultureInfo.InvariantCulture)
+                );
+
+            Regex regPattern = new Regex(captureSampleRegExpr, RegexOptions.IgnoreCase);
 
             ZipFile zipFile = null;
 
@@ -61,9 +68,9 @@ namespace Xrns2XMod
 
                 string sampleFilename = null;
 
-                for (int i = 0; i < zipFile.Count; i++)
+                foreach (ZipEntry zip in zipFile)
                 {
-                    Match matchInst = regPattern.Match(zipFile[i].Name);
+                    Match matchInst = regPattern.Match(zip.Name);
 
                     sampleFilename = matchInst.Value;
 
@@ -80,22 +87,47 @@ namespace Xrns2XMod
                     {
                         if (stream != null)
                         {
-                            stream.BaseStream.Position = 0;
-
                             stream.BaseStream.CopyTo(outputStream);
+
+                            output.Stream = outputStream;
+
+                            string extension = Path.GetExtension(sampleFilename).Substring(1);
+
+                            if (extension.Equals("aif", StringComparison.InvariantCultureIgnoreCase))
+                                extension = "aiff";
+
+                            output.Format = (FORMAT)Enum.Parse(typeof(FORMAT), extension.ToUpper());
                         }
                     }
-
-                    
                 }
+                else
+                {
+                    // Sample not found!
+                    System.Diagnostics.Debug.WriteLine("No sample caught!");
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
                 if (zipFile != null)
                     zipFile.Close();
-            }
+            }            
 
-            return outputStream;
+            return output;
+        }
+
+        /// <summary>
+        /// return stream sample, otherwise null
+        /// </summary>
+        /// <param name="instrumentIndex"></param>
+        /// <param name="sampleIndex"></param>
+        /// <returns></returns>
+        public Stream GetSampleStream(int instrumentIndex, int sampleIndex)
+        {
+            return GetSampleStreamInfo(instrumentIndex, sampleIndex).Stream;
         }        
 
         public bool DowngradeSong(bool replaceZKCommand)
