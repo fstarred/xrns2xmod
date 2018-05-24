@@ -210,8 +210,10 @@ namespace Xrns2XMod
                         // 1) same as original
                         // 2) taken from song settings                        
                         int sampleRate = freqC3;
-                        
+						Console.WriteLine("int sampleRate = freqC3; "+ sampleRate);
+
                         int freqFromIni = instruments[ci].Samples[0].SampleFreq;
+
 
                         if (freqFromIni > 0)
                         {
@@ -222,13 +224,21 @@ namespace Xrns2XMod
                             sampleRate = bassChannelInfo.freq;
                         
 
-                        int mixer = BassWrapper.PlugChannelToMixer(handle, sampleRate, 1, 8);
+						Console.WriteLine("2 sampleRate "+ sampleRate+ "   sampleLength "+ sampleLength);
+                        int mixer = BassWrapper.PlugChannelToMixer(handle, sampleRate, 1, 16);
+						Console.WriteLine("bassChannelInfo.freq " + bassChannelInfo.freq);
+						Console.WriteLine("bassChannelInfo.chans " + bassChannelInfo.chans);
+						Console.WriteLine("origres " + origres);
+
+						//int mixer = BassWrapper.PlugChannelToMixer(handle, bassChannelInfo.freq, bassChannelInfo.chans, 8);
+						//int mixer = BassWrapper.PlugChannelToMixer(handle, bassChannelInfo.freq, bassChannelInfo.chans, 16);
 
                         if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instruments[ci].Samples[0].Volume != 1.0f)
                         {
                             OnReportProgress(new EventReportProgressArgs(String.Format("Ramping sample volume to value {0}", instruments[ci].Samples[0].Volume)));
                             BassWrapper.AdjustSampleVolume(handle, mixer, instruments[ci].Samples[0].Volume);
                         }
+                        
 
                         Stream stream = BassWrapper.GetModEncodedSample(mixer, sampleLength, Settings.ForceProTrackerCompatibility);
 
