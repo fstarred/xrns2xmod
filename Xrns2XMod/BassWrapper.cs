@@ -208,9 +208,9 @@ namespace Xrns2XMod
 
                 inputSample.Seek(0, SeekOrigin.Begin);
             }
-
+#if DEBUG
             Console.WriteLine ("totalDataWritten " + totalDataWritten);
-
+#endif
             for (uint i = 0; i < totalDataWritten; i += 2)
             {
                 short value = reader.ReadInt16 ();
