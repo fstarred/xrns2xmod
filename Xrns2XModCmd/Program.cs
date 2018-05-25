@@ -301,8 +301,8 @@ namespace Xrns2XModCmd
 
                     /*
                     ** Slamy: Moving the cursor like this causes problems on Mono.
-                    ** It says "fixing "Value must be positive and below the buffer height.""
-                    ** But it doesn't seems to be necessary anyway?
+                    ** It says 'fixing "Value must be positive and below the buffer height."'
+                    ** But it doesn't seems to be necessary anyway? I'll comment it out.
                     */
                     //Console.CursorTop++;
 

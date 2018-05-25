@@ -210,10 +210,8 @@ namespace Xrns2XMod
                         // 1) same as original
                         // 2) taken from song settings                        
                         int sampleRate = freqC3;
-						Console.WriteLine("int sampleRate = freqC3; "+ sampleRate);
-
+                        
                         int freqFromIni = instruments[ci].Samples[0].SampleFreq;
-
 
                         if (freqFromIni > 0)
                         {
@@ -221,24 +219,26 @@ namespace Xrns2XMod
                             sampleRate = freqFromIni;
                         }
                         else
-                            sampleRate = bassChannelInfo.freq;
-                        
+                        {
+                            OnReportProgress (new EventReportProgressArgs (String.Format ("Sample {0} frequency stays C3 frequency {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+                            sampleRate = freqC3;
+                        }
 
-						Console.WriteLine("2 sampleRate "+ sampleRate+ "   sampleLength "+ sampleLength);
-                        int mixer = BassWrapper.PlugChannelToMixer(handle, sampleRate, 1, 16);
-						Console.WriteLine("bassChannelInfo.freq " + bassChannelInfo.freq);
-						Console.WriteLine("bassChannelInfo.chans " + bassChannelInfo.chans);
-						Console.WriteLine("origres " + origres);
-
-						//int mixer = BassWrapper.PlugChannelToMixer(handle, bassChannelInfo.freq, bassChannelInfo.chans, 8);
-						//int mixer = BassWrapper.PlugChannelToMixer(handle, bassChannelInfo.freq, bassChannelInfo.chans, 16);
+#if DEBUG
+                        Console.WriteLine("sampleRate "+ sampleRate+ "   sampleLength "+ sampleLength);
+                        Console.WriteLine("bassChannelInfo.freq " + bassChannelInfo.freq);
+                        Console.WriteLine("bassChannelInfo.chans " + bassChannelInfo.chans);
+                        Console.WriteLine("origres " + origres);
+#endif
+                        //Enforce 16 Bit Samples here as 8 Bit samples are corrupted (only on Linux?).
+                        //The 8 least significant bits are removed later.
+                        int mixer = BassWrapper.PlugChannelToMixer (handle, sampleRate, 1, 16);
 
                         if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instruments[ci].Samples[0].Volume != 1.0f)
                         {
                             OnReportProgress(new EventReportProgressArgs(String.Format("Ramping sample volume to value {0}", instruments[ci].Samples[0].Volume)));
                             BassWrapper.AdjustSampleVolume(handle, mixer, instruments[ci].Samples[0].Volume);
                         }
-                        
 
                         Stream stream = BassWrapper.GetModEncodedSample(mixer, sampleLength, Settings.ForceProTrackerCompatibility);
 

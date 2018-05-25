@@ -11,7 +11,9 @@ namespace Xrns2XMod
 {
     public static class BassWrapper
     {
-		static int testCnt = 0;
+#if DEBUG
+        static int testCnt = 0;
+#endif
 
         public static void InitResources(IntPtr win, string bassEmail, string bassCode)
         {
@@ -51,16 +53,18 @@ namespace Xrns2XMod
         {
             int handle;
 
-			Console.WriteLine ("GetBassTream " + testCnt + " "+ input.Stream.Length);
-
+#if DEBUG
+            Console.WriteLine ("GetBassTream " + testCnt + " "+ input.Stream.Length);
+#endif
             Stream stream = input.Stream;
 
-			stream.Seek(0, System.IO.SeekOrigin.Begin);
-
-			using (FileStream file = new FileStream("getBassStream"+testCnt+".bin", FileMode.Create, System.IO.FileAccess.Write))
-				stream.CopyTo(file);
-			
+#if DEBUG
             stream.Seek(0, System.IO.SeekOrigin.Begin);
+
+            using (FileStream file = new FileStream("getBassStream"+testCnt+".bin", FileMode.Create, System.IO.FileAccess.Write))
+                stream.CopyTo(file);
+#endif			
+            stream.Seek (0, System.IO.SeekOrigin.Begin);
 
             byte[] buffer = Utility.GetBytesFromStream(stream, stream.Length);
 
@@ -75,15 +79,13 @@ namespace Xrns2XMod
 
             switch (input.Format)
             {
-				case FORMAT.WAV:
+                case FORMAT.WAV:
                 case FORMAT.AIFF:
                 case FORMAT.MP3:
                 case FORMAT.OGG:
-					Console.WriteLine ("OGG");
                     actionStreamCreateFile = Bass.BASS_StreamCreateFile;
                     break;
                 case FORMAT.FLAC:
-					Console.WriteLine ("FLAC");
                     actionStreamCreateFile = BassFlac.BASS_FLAC_StreamCreateFile;                    
                     break;
                 case FORMAT.AAC:
@@ -145,7 +147,7 @@ namespace Xrns2XMod
         public static BASS_CHANNELINFO GetBassChannelInfo(int handle)
         {
             BASS_CHANNELINFO output = Bass.BASS_ChannelGetInfo(handle);
-			Console.WriteLine ("BASS_CHANNELINFO " + output.ToString());
+
             return output;
         }
 
@@ -166,14 +168,15 @@ namespace Xrns2XMod
             // total data written to the new byte[] buffer
             int totalDataWritten = Bass.BASS_ChannelGetData(handle, buffer, (int)sampleLength);
 
-			using (BinaryWriter writerRaw = new BinaryWriter (File.Open ("fileRaw" + testCnt + ".bin", FileMode.Create)))
-			{
-				for (uint i = 0; i < totalDataWritten; i++)
-				{
-					writerRaw.Write(buffer[i]);
-				}
-			}
-			
+#if DEBUG
+            using (BinaryWriter writerRaw = new BinaryWriter (File.Open ("fileRaw" + testCnt + ".bin", FileMode.Create)))
+            {
+                for (uint i = 0; i < totalDataWritten; i++)
+                {
+                    writerRaw.Write(buffer[i]);
+                }
+            }
+#endif
             MemoryStream inputSample = new MemoryStream(buffer);
 
             MemoryStream outputStream = new MemoryStream();
@@ -182,46 +185,45 @@ namespace Xrns2XMod
 
             BinaryWriter writer = new BinaryWriter(outputStream);
 
-			Console.WriteLine ("sampleLen " + sampleLength);
+#if DEBUG
+            Console.WriteLine ("sampleLen " + sampleLength);
+            testCnt++;
 
-			/*
-			inputSample.Seek(0, SeekOrigin.Begin);
-			using (FileStream file = new FileStream("file"+testCnt+".bin", FileMode.Create, System.IO.FileAccess.Write))
-				inputSample.CopyTo(file);
-			*/
-			inputSample.Seek(0, SeekOrigin.Begin);
-			testCnt++;
-            
-			BinaryWriter writer2 = new BinaryWriter (File.Open ("fileB" + testCnt + ".bin", FileMode.Create));
-			BinaryWriter writer3 = new BinaryWriter (File.Open ("fileD" + testCnt + ".bin", FileMode.Create));
-				
+            BinaryWriter writer2 = new BinaryWriter (File.Open ("fileB" + testCnt + ".bin", FileMode.Create));
+            BinaryWriter writer3 = new BinaryWriter (File.Open ("fileD" + testCnt + ".bin", FileMode.Create));
+            inputSample.Seek(0, SeekOrigin.Begin);
+            inputSample.Seek (0, SeekOrigin.Begin);
+#endif
+
             // Amiga ProTracker compatibility
             // all samples with no loop should begin with two bytes of 0 value (Thanks to Jojo of OpenMPT for the hints)            
             if (ptCompatibility)
             {
                 for (int i = 0; i < 2; i++)
                 {
-					short value = reader.ReadInt16();
+                    short value = reader.ReadInt16();
                     if (value != 0)
-                        writer.Write((sbyte)0);
+                        writer.Write ((sbyte)0);
                 }
 
                 inputSample.Seek(0, SeekOrigin.Begin);
             }
 
-			Console.WriteLine ("totalDataWritten " + totalDataWritten);
+            Console.WriteLine ("totalDataWritten " + totalDataWritten);
 
-            for (uint i = 0; i < totalDataWritten; i+=2)
+            for (uint i = 0; i < totalDataWritten; i += 2)
             {
-				short value = reader.ReadInt16();
-				sbyte newValue = (sbyte)(value/256);
-                writer.Write(newValue);
-				writer2.Write (newValue);
+                short value = reader.ReadInt16 ();
+                sbyte newValue = (sbyte)(value / 256);
+                writer.Write (newValue);
+#if DEBUG
+                writer2.Write (newValue);
+#endif
             }
-
-			writer2.Close();
-			writer3.Close();
-
+#if DEBUG
+    		writer2.Close();
+    		writer3.Close();
+#endif
             // sample length must be even, because its value is stored divided by 2
             if (totalDataWritten % 2 != 0)
             {
@@ -248,17 +250,17 @@ namespace Xrns2XMod
         {
             BASSFlag bassFlag = BASSFlag.BASS_STREAM_DECODE;
 
-
             if (res == 8)
-				bassFlag |= BASSFlag.BASS_SAMPLE_8BITS;
+                bassFlag |= BASSFlag.BASS_SAMPLE_8BITS;
 
             // this will be the final mixer output stream being played   
             int mixer = BassMix.BASS_Mixer_StreamCreate(freq, chans, bassFlag);
 
             // add channel to mixer
             bool isMixerGood = BassMix.BASS_Mixer_StreamAddChannel(mixer, handle, BASSFlag.BASS_MIXER_NORAMPIN);
-
-			Console.WriteLine (freq + " "+chans+" "+res+" isMixerGood " + isMixerGood);
+#if DEBUG
+            Console.WriteLine (freq + " "+chans+" "+res+" isMixerGood " + isMixerGood);
+#endif
             return mixer;
         }        
 
