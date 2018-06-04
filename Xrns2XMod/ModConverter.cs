@@ -219,10 +219,20 @@ namespace Xrns2XMod
                             sampleRate = freqFromIni;
                         }
                         else
-                            sampleRate = bassChannelInfo.freq;
-                        
+                        {
+                            OnReportProgress (new EventReportProgressArgs (String.Format ("Sample {0} frequency stays C3 frequency {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+                            sampleRate = freqC3;
+                        }
 
-                        int mixer = BassWrapper.PlugChannelToMixer(handle, sampleRate, 1, 8);
+#if DEBUG
+                        Console.WriteLine("sampleRate "+ sampleRate+ "   sampleLength "+ sampleLength);
+                        Console.WriteLine("bassChannelInfo.freq " + bassChannelInfo.freq);
+                        Console.WriteLine("bassChannelInfo.chans " + bassChannelInfo.chans);
+                        Console.WriteLine("origres " + origres);
+#endif
+                        //Enforce 16 Bit Samples here as 8 Bit samples are corrupted (only on Linux?).
+                        //The 8 least significant bits are removed later.
+                        int mixer = BassWrapper.PlugChannelToMixer (handle, sampleRate, 1, 16);
 
                         if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instruments[ci].Samples[0].Volume != 1.0f)
                         {

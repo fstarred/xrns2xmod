@@ -11,6 +11,10 @@ namespace Xrns2XMod
 {
     public static class BassWrapper
     {
+#if DEBUG
+        static int testCnt = 0;
+#endif
+
         public static void InitResources(IntPtr win, string bassEmail, string bassCode)
         {
             string targetPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -49,9 +53,18 @@ namespace Xrns2XMod
         {
             int handle;
 
+#if DEBUG
+            Console.WriteLine ("GetBassTream " + testCnt + " "+ input.Stream.Length);
+#endif
             Stream stream = input.Stream;
 
+#if DEBUG
             stream.Seek(0, System.IO.SeekOrigin.Begin);
+
+            using (FileStream file = new FileStream("getBassStream"+testCnt+".bin", FileMode.Create, System.IO.FileAccess.Write))
+                stream.CopyTo(file);
+#endif			
+            stream.Seek (0, System.IO.SeekOrigin.Begin);
 
             byte[] buffer = Utility.GetBytesFromStream(stream, stream.Length);
 
@@ -155,6 +168,15 @@ namespace Xrns2XMod
             // total data written to the new byte[] buffer
             int totalDataWritten = Bass.BASS_ChannelGetData(handle, buffer, (int)sampleLength);
 
+#if DEBUG
+            using (BinaryWriter writerRaw = new BinaryWriter (File.Open ("fileRaw" + testCnt + ".bin", FileMode.Create)))
+            {
+                for (uint i = 0; i < totalDataWritten; i++)
+                {
+                    writerRaw.Write(buffer[i]);
+                }
+            }
+#endif
             MemoryStream inputSample = new MemoryStream(buffer);
 
             MemoryStream outputStream = new MemoryStream();
@@ -163,9 +185,15 @@ namespace Xrns2XMod
 
             BinaryWriter writer = new BinaryWriter(outputStream);
 
-            int delta = 0;
+#if DEBUG
+            Console.WriteLine ("sampleLen " + sampleLength);
+            testCnt++;
 
-            byte oldValue = (byte)128;
+            BinaryWriter writer2 = new BinaryWriter (File.Open ("fileB" + testCnt + ".bin", FileMode.Create));
+            BinaryWriter writer3 = new BinaryWriter (File.Open ("fileD" + testCnt + ".bin", FileMode.Create));
+            inputSample.Seek(0, SeekOrigin.Begin);
+            inputSample.Seek (0, SeekOrigin.Begin);
+#endif
 
             // Amiga ProTracker compatibility
             // all samples with no loop should begin with two bytes of 0 value (Thanks to Jojo of OpenMPT for the hints)            
@@ -173,22 +201,29 @@ namespace Xrns2XMod
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    byte value = reader.ReadByte();
-                    if (value != 128)
-                        writer.Write((sbyte)0);
+                    short value = reader.ReadInt16();
+                    if (value != 0)
+                        writer.Write ((sbyte)0);
                 }
 
                 inputSample.Seek(0, SeekOrigin.Begin);
             }
-
-            for (uint i = 0; i < totalDataWritten; i++)
+#if DEBUG
+            Console.WriteLine ("totalDataWritten " + totalDataWritten);
+#endif
+            for (uint i = 0; i < totalDataWritten; i += 2)
             {
-                byte newValue = reader.ReadByte();
-                delta += (newValue - oldValue);
-                oldValue = newValue;
-                writer.Write((sbyte)delta);
+                short value = reader.ReadInt16 ();
+                sbyte newValue = (sbyte)(value / 256);
+                writer.Write (newValue);
+#if DEBUG
+                writer2.Write (newValue);
+#endif
             }
-
+#if DEBUG
+    		writer2.Close();
+    		writer3.Close();
+#endif
             // sample length must be even, because its value is stored divided by 2
             if (totalDataWritten % 2 != 0)
             {
@@ -223,7 +258,9 @@ namespace Xrns2XMod
 
             // add channel to mixer
             bool isMixerGood = BassMix.BASS_Mixer_StreamAddChannel(mixer, handle, BASSFlag.BASS_MIXER_NORAMPIN);
-
+#if DEBUG
+            Console.WriteLine (freq + " "+chans+" "+res+" isMixerGood " + isMixerGood);
+#endif
             return mixer;
         }        
 
