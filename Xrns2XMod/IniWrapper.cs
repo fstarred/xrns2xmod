@@ -27,6 +27,9 @@ namespace Xrns2XMod
 
         #region Constructor
 
+		public const int C2_BASE_FREQUENCY = -1;
+		public const int C3_BASE_FREQUENCY = -2;
+
         public IniWrapper(string xrnsFile, bool forceCreateIni)
         {
             Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
@@ -99,7 +102,12 @@ namespace Xrns2XMod
 
             value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "0");
 
-            return int.Parse(value);
+			if (value.Equals("Low") || value.Equals("C2"))
+                return C2_BASE_FREQUENCY;
+			else if (value.Equals ("High") || value.Equals("C3"))
+				return C3_BASE_FREQUENCY;
+            else
+                return int.Parse(value);
         }
         
         #endregion
