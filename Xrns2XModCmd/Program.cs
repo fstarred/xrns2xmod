@@ -328,14 +328,7 @@ namespace Xrns2XModCmd
                     Console.Write(Environment.NewLine);
 
                     Console.WriteLine("File is ok, now it's time to convert.");
-
                     Console.WriteLine("{0} conversion has started... please wait ", destType);
-
-                    Thread t = new Thread(new ThreadStart(ThreadProc));
-
-                    t.IsBackground = true;
-
-                    t.Start();
 
                     DateTime dtStart = DateTime.Now;
 
@@ -467,22 +460,6 @@ namespace Xrns2XModCmd
 
         }
 
-
-        public static void ThreadProc()
-        {
-            char[] loopCharSeq = { '\\', '|', '/', '-' };
-            int curChar = 0;
-
-            while (true)
-            {
-                Console.CursorLeft = cursorLeftPosition;
-                Console.Write(loopCharSeq[curChar++ % 4]);
-                Thread.Sleep(500);
-            }
-        }
-
-
     }
-
 
 }
