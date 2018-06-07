@@ -10,6 +10,5 @@ namespace Xrns2XMod
         //public bool MantainOriginalSampleFreq { get; set; }        
         public bool ForceProTrackerCompatibility { get; set; }
         public int PortamentoLossThreshold { get; set; } // Within this value, portamento is choosen to extra fine portamento whenever there is a loss of accuracy
-        public bool NtscMode { get; set; }
     }
 }

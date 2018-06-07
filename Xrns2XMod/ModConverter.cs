@@ -59,9 +59,8 @@ namespace Xrns2XMod
 
             bool forceProTrackerCompatibility = Settings.ForceProTrackerCompatibility;
             int portamentoAccuracyLossThreshold = Settings.PortamentoLossThreshold;
-            bool NtscMode = Settings.NtscMode;
 
-            modUtils = new ModUtils(songData, ticksPerRow, forceProTrackerCompatibility, portamentoAccuracyLossThreshold, NtscMode);
+            modUtils = new ModUtils(songData, ticksPerRow, forceProTrackerCompatibility, portamentoAccuracyLossThreshold);
         }
 
         const int maxInstruments = 31;
@@ -145,21 +144,7 @@ namespace Xrns2XMod
         {
             const int sampleInfoSize = 930;
 
-            /*
-             * Informations about frequency is based on http://www.pouet.net/topic.php?which=8628
-             * For a PAL machine:
-             * SampleRate = 7093789.2 / (Period * 2)
-             * C2 428 -> 8287.13691 Hz
-             * C3 214 -> 16574.2738 Hz
-             * For a NTSC machine:
-             * SampleRate = 7159090 / (Period * 2)
-             * C2 428 -> 8363.423 Hz
-             * C3 214 -> 16726.846 Hz
-             */
-
-            const int NtscC2Frequency = 8363;
-            const int PalC2Frequency = 8287;
-            int freqC2 = Settings.NtscMode ? NtscC2Frequency : PalC2Frequency;
+            const int freqC3 = 8363;
 
             const int maxSampleLengthMOD = 65536;
 
@@ -223,8 +208,8 @@ namespace Xrns2XMod
 
                         // samplerate may be:
                         // 1) same as original
-                        // 2) taken from song settings
-                        int sampleRate = freqC2;
+                        // 2) taken from song settings                        
+                        int sampleRate = freqC3;
                         
                         int freqFromIni = instruments[ci].Samples[0].SampleFreq;
 
@@ -236,7 +221,7 @@ namespace Xrns2XMod
                         else
                         {
                             OnReportProgress (new EventReportProgressArgs (String.Format ("Sample {0} frequency stays C3 frequency {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
-                            sampleRate = freqC2;
+                            sampleRate = freqC3;
                         }
 
 #if DEBUG
