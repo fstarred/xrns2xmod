@@ -38,6 +38,7 @@ namespace Xrns2XModCmd
                 string destType = "xm";
                 //bool convfreq = false;
                 bool ptmode = true;
+                bool ptNtsc = false;
                 string volumeScalingMode = "S";
                 bool downgrade = false;
                 bool replaceZK = false;
@@ -58,6 +59,8 @@ namespace Xrns2XModCmd
                     //  v => convfreq = v != null },
                     { "ptmode=", "ProTracker compatibility (affects only mod)",
                       v => ptmode = v == null || Boolean.Parse(v) == true },
+                    { "ntsc=", "ProTracker Region (affects only mod)",
+                      v => ptNtsc = v == null || Boolean.Parse(v) == true },
                     { "volscal|volumescaling=", "volume scaling mode (N(one)|S(ample)|C(olumn))",
                       v => volumeScalingMode = v },
                     { "tempo=" , "the initial tempo value (affects only xm)", v => tempo = int.Parse(v) },
@@ -299,7 +302,12 @@ namespace Xrns2XModCmd
 
                     //MainFactory.InitResources(IntPtr.Zero, bassEmail, bassCode);
 
-                    Console.CursorTop++;
+                    /*
+                    ** Slamy: Moving the cursor like this causes problems on Mono.
+                    ** It says 'fixing "Value must be positive and below the buffer height."'
+                    ** But it doesn't seems to be necessary anyway? I'll comment it out.
+                    */
+                    //Console.CursorTop++;
 
                     Console.WriteLine("Reading xrns data...");
 
@@ -357,6 +365,7 @@ namespace Xrns2XModCmd
 
                         //settings.MantainOriginalSampleFreq = !convfreq;
                         settings.ForceProTrackerCompatibility = ptmode;
+                        settings.NtscMode = ptNtsc;
                         settings.VolumeScalingMode = GetVolumeScalingMode(volumeScalingMode);
                         settings.PortamentoLossThreshold = portamentoLossThreshold;
 

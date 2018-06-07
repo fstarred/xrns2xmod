@@ -26,8 +26,8 @@ namespace Xrns2XMod
         bool forceProtrackerCompatibility;
         int portamentoAccuracyThreshold;
 
-        public ModUtils(SongData songData, int paramTicksPerRow, bool forceProTrackerCompatibility, int portamentoAccuracyThreshold)
-            : base(songData, paramTicksPerRow)
+        public ModUtils(SongData songData, int paramTicksPerRow, bool forceProTrackerCompatibility, int portamentoAccuracyThreshold, bool ntscMode)
+            : base(songData, paramTicksPerRow, ntscMode)
         {
             modCommands = new ModCommands(songData, paramTicksPerRow);
 
@@ -52,9 +52,9 @@ namespace Xrns2XMod
             }
 
         }
-
+            
         public ModUtils(SongData songData, int paramTicksPerRow)
-            : this(songData, paramTicksPerRow, false, 2)
+            : this(songData, paramTicksPerRow, false, 2, true) //NTSC shall be default for this constructor so XM mode doesn't get changed
         {
             
         }
