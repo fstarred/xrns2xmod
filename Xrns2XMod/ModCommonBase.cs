@@ -63,7 +63,7 @@ namespace Xrns2XMod
 
             float C2Freq = ntscMode ? NtscC2Frequency : PalC2Frequency;
 
-            int f2t = (int)(1536.0 * (Math.Log((double)sampleRate / C2Freq) / Math.Log(2.0)));
+			int f2t = (int)Math.Round(1536.0 * (Math.Log((double)sampleRate / C2Freq) / Math.Log(2.0)));
             int transp = f2t >> 7;
             int ftune = f2t & 0x7F; //0x7F == 111 1111 
 

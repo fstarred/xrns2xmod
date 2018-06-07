@@ -159,7 +159,10 @@ namespace Xrns2XMod
 
             const int NtscC2Frequency = 8363;
             const int PalC2Frequency = 8287;
+			const int NtscC3Frequency = 16727;
+			const int PalC3Frequency = 16574;
             int freqC2 = Settings.NtscMode ? NtscC2Frequency : PalC2Frequency;
+			int freqC3 = Settings.NtscMode ? NtscC3Frequency : PalC3Frequency;
 
             const int maxSampleLengthMOD = 65536;
 
@@ -230,13 +233,26 @@ namespace Xrns2XMod
 
                         if (freqFromIni > 0)
                         {
-                            OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to: {1} Hz", (ci + 1), freqFromIni), MsgType.INFO));
-                            sampleRate = freqFromIni;
+							sampleRate = freqFromIni;
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency manually adjusted to: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
                         }
+						else if (freqFromIni == IniWrapper.C3_BASE_FREQUENCY)
+						{
+							sampleRate = freqC3;
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to C3 frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+
+						}
+						else if (freqFromIni == IniWrapper.C2_BASE_FREQUENCY)
+						{
+							sampleRate = freqC2;
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to C2 frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+
+						}
                         else
                         {
-                            OnReportProgress (new EventReportProgressArgs (String.Format ("Sample {0} frequency stays C3 frequency {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
-                            sampleRate = freqC2;
+							sampleRate = freqC2;
+							OnReportProgress (new EventReportProgressArgs (String.Format ("Sample {0} frequency defaults to C2 frequency {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+                            
                         }
 
 #if DEBUG
