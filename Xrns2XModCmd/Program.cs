@@ -369,6 +369,8 @@ namespace Xrns2XModCmd
                         settings.VolumeScalingMode = GetVolumeScalingMode(volumeScalingMode);
                         settings.PortamentoLossThreshold = portamentoLossThreshold;
 
+						settings.printSettings();
+
                         if (portamentoLossThreshold < 0 || portamentoLossThreshold > 4)
                             throw new ApplicationException("invalid portamento loss threshold value (valid range: 0-4)");
                         if (settings.VolumeScalingMode == VOLUME_SCALING_MODE.COLUMN)

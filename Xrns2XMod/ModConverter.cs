@@ -161,8 +161,12 @@ namespace Xrns2XMod
             const int PalC2Frequency = 8287;
 			const int NtscC3Frequency = 16727;
 			const int PalC3Frequency = 16574;
+			const int NtscB3Frequency = 31677;
+			const int PalB3Frequency = 31388;
+
             int freqC2 = Settings.NtscMode ? NtscC2Frequency : PalC2Frequency;
 			int freqC3 = Settings.NtscMode ? NtscC3Frequency : PalC3Frequency;
+			int freqB3 = Settings.NtscMode ? NtscB3Frequency : PalB3Frequency;
 
             const int maxSampleLengthMOD = 65536;
 
@@ -246,7 +250,20 @@ namespace Xrns2XMod
 						{
 							sampleRate = freqC2;
 							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to C2 frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
-
+						}
+						else if (freqFromIni == IniWrapper.PROTRACKER_MAXIMUM_FREQUENCY)
+						{
+							//Use the maximum possible frequency or the original one as upsampling doesn't makes sense.
+							if (bassChannelInfo.freq > freqB3)
+							{
+								sampleRate = freqB3;
+								OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to maximum B3 frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+							}
+							else
+							{
+								sampleRate=bassChannelInfo.freq;
+								OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency is original sample frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+							}
 						}
                         else
                         {
