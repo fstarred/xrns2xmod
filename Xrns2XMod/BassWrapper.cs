@@ -225,7 +225,7 @@ namespace Xrns2XMod
     		writer3.Close();
 #endif
             // sample length must be even, because its value is stored divided by 2
-            if (totalDataWritten % 2 != 0)
+			if (outputStream.Length % 2 != 0)
             {
                 writer.Write((sbyte)0);
             }
