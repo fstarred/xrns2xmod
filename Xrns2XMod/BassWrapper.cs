@@ -161,7 +161,7 @@ namespace Xrns2XMod
             Bass.BASS_StreamFree(handle);
         }
 
-        public static Stream GetModEncodedSample(int handle, long sampleLength, bool ptCompatibility)
+		public static Stream GetModEncodedSample(int handle, long sampleLength, PROTRACKER_COMPATIBILITY_MODE ptCompatibility)
         {
             byte[] buffer = new byte[sampleLength];
 
@@ -197,7 +197,7 @@ namespace Xrns2XMod
 
             // Amiga ProTracker compatibility
             // all samples with no loop should begin with two bytes of 0 value (Thanks to Jojo of OpenMPT for the hints)            
-            if (ptCompatibility)
+			if (ptCompatibility != PROTRACKER_COMPATIBILITY_MODE.NONE)
             {
                 for (int i = 0; i < 2; i++)
                 {

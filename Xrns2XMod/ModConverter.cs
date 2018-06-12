@@ -57,7 +57,7 @@ namespace Xrns2XMod
 
             int ticksPerRow = initialTickPerRow;
 
-            bool forceProTrackerCompatibility = Settings.ForceProTrackerCompatibility;
+			PROTRACKER_COMPATIBILITY_MODE forceProTrackerCompatibility = Settings.ForceProTrackerCompatibility;
             int portamentoAccuracyLossThreshold = Settings.PortamentoLossThreshold;
             bool NtscMode = Settings.NtscMode;
 
@@ -163,10 +163,14 @@ namespace Xrns2XMod
 			const int PalC3Frequency = 16574;
 			const int NtscB3Frequency = 31677;
 			const int PalB3Frequency = 31388;
+			const int NtscA3Frequency = 28185;
+			const int PalA3Frequency = 27928;
 
             int freqC2 = Settings.NtscMode ? NtscC2Frequency : PalC2Frequency;
 			int freqC3 = Settings.NtscMode ? NtscC3Frequency : PalC3Frequency;
 			int freqB3 = Settings.NtscMode ? NtscB3Frequency : PalB3Frequency;
+			int freqA3 = Settings.NtscMode ? NtscA3Frequency : PalA3Frequency;
+			int freqMax = Settings.ForceProTrackerCompatibility == PROTRACKER_COMPATIBILITY_MODE.A3MAX ? freqA3 : freqB3;
 
             const int maxSampleLengthMOD = 65536;
 
@@ -254,10 +258,10 @@ namespace Xrns2XMod
 						else if (freqFromIni == IniWrapper.PROTRACKER_MAXIMUM_FREQUENCY)
 						{
 							//Use the maximum possible frequency or the original one as upsampling doesn't makes sense.
-							if (bassChannelInfo.freq > freqB3)
+							if (bassChannelInfo.freq > freqMax)
 							{
-								sampleRate = freqB3;
-								OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to maximum B3 frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+								sampleRate = freqMax;
+								OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to maximum frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
 							}
 							else
 							{

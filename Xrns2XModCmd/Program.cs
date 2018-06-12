@@ -15,6 +15,7 @@ namespace Xrns2XModCmd
         const int cursorLeftPosition = freeSpaceForMessaging + 2;
 
         static readonly string[] VOLUME_SCALING_AVAILABLE_MODE = new string[] { "N", "S", "C" };
+		static readonly string[] FORCE_PROTRACKER_COMPATIBILITY_AVAILABLE_MODE = new string[] { "N", "S", "H" };
 
         private static void PrintUsage(OptionSet p)
         {
@@ -37,7 +38,7 @@ namespace Xrns2XModCmd
             {
                 string destType = "xm";
                 //bool convfreq = false;
-                bool ptmode = true;
+                string ptmode = "H";
                 bool ptNtsc = false;
                 string volumeScalingMode = "S";
                 bool downgrade = false;
@@ -57,8 +58,8 @@ namespace Xrns2XModCmd
                       v => destType = v },
                     //{ "convfreq", "convert all sample frequency to 8363 Hz (affects only mod)",
                     //  v => convfreq = v != null },
-                    { "ptmode=", "ProTracker compatibility (affects only mod)",
-                      v => ptmode = v == null || Boolean.Parse(v) == true },
+                    { "ptmode=", "ProTracker compatibility (affects only mod) (N(one)|S(oftware)|H(ardware))",
+					  v => ptmode = v },
                     { "ntsc=", "ProTracker Region (affects only mod)",
                       v => ptNtsc = v == null || Boolean.Parse(v) == true },
                     { "volscal|volumescaling=", "volume scaling mode (N(one)|S(ample)|C(olumn))",
@@ -357,7 +358,7 @@ namespace Xrns2XModCmd
                         ModSettings settings = new ModSettings();
 
                         //settings.MantainOriginalSampleFreq = !convfreq;
-                        settings.ForceProTrackerCompatibility = ptmode;
+						settings.ForceProTrackerCompatibility = GetProtrackerCompatibilityMode(ptmode);
                         settings.NtscMode = ptNtsc;
                         settings.VolumeScalingMode = GetVolumeScalingMode(volumeScalingMode);
                         settings.PortamentoLossThreshold = portamentoLossThreshold;
@@ -445,6 +446,35 @@ namespace Xrns2XModCmd
 
             return mode;
         }
+
+		static PROTRACKER_COMPATIBILITY_MODE GetProtrackerCompatibilityMode(string input)
+		{
+			PROTRACKER_COMPATIBILITY_MODE mode = PROTRACKER_COMPATIBILITY_MODE.A3MAX;
+
+			input = input.ToUpper();
+
+			if (FORCE_PROTRACKER_COMPATIBILITY_AVAILABLE_MODE.Contains(input))
+			{
+
+				switch (input.ToCharArray()[0])
+				{
+				case 'N':
+					mode = PROTRACKER_COMPATIBILITY_MODE.NONE;
+					break;
+				case 'S':
+					mode = PROTRACKER_COMPATIBILITY_MODE.B3MAX;
+					break;
+				case 'H':
+					mode = PROTRACKER_COMPATIBILITY_MODE.A3MAX;
+					break;
+				}
+			}
+			else
+				throw new ApplicationException("Invalid ProTracker Compatibiltiy mode specified");
+
+			return mode;
+		}
+
 
         static void ReportProgress(object sender, EventReportProgressArgs e)
         {
