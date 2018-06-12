@@ -46,7 +46,8 @@ namespace Xrns2XMod
                 if (iniExists == false)
                 {
                     configSource.AddConfig("volume");
-                    configSource.AddConfig("frequency");                
+                    configSource.AddConfig("frequency");
+					configSource.AddConfig("sinc");
                 }
                 configSource.AutoSave = true;
 
@@ -57,6 +58,16 @@ namespace Xrns2XMod
         #endregion
 
         #region Methods
+
+		public void SaveDefaultSincInterpolationPoints(int instrument, int sample, int value)
+		{
+			//if (Utility.IsWindowsOS())				
+			//    IniFile.IniWriteValue("volume", string.Format("{0}/{1}", instrument, sample), value.ToString(), IniPath);
+
+			IConfig configSection = configSource.Configs["sinc"];
+
+			configSection.Set(string.Format("{0}/{1}", instrument, sample), value.ToString());
+		}
 
         public void SaveDefaultVolumeSample(int instrument, int sample, int value)
         {
@@ -112,6 +123,19 @@ namespace Xrns2XMod
             else
                 return int.Parse(value);
         }
+
+		public int ReadSincInterpolationPoints(int instrument, int sample)
+		{
+			string value = null;
+			//if (Utility.IsWindowsOS())
+			//    value = IniFile.IniReadValue("frequency", string.Format("{0}/{1}", instrument, sample), IniPath);
+
+			IConfig configSection = configSource.Configs["sinc"];
+
+			value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "2");
+
+			return int.Parse(value);
+		}
         
         #endregion
 

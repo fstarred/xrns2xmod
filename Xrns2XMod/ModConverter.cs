@@ -276,6 +276,27 @@ namespace Xrns2XMod
                             
                         }
 
+						float ret=0;
+						Bass.BASS_ChannelGetAttribute(handle,BASSAttribute.BASS_ATTRIB_SRC,ref ret);
+						//Console.WriteLine("BASS_ATTRIB_SRC " + ret);
+
+						int sincPoints = instruments[ci].Samples[0].SincInterpolationPoints;
+
+						if ((int)ret != sincPoints)
+						{
+							OnReportProgress(new EventReportProgressArgs(String.Format("Altering number of Sinc Interpolation Points to {0}", sincPoints)));
+							Bass.BASS_ChannelSetAttribute(handle,BASSAttribute.BASS_ATTRIB_SRC, (float)sincPoints);
+
+							Bass.BASS_ChannelGetAttribute(handle,BASSAttribute.BASS_ATTRIB_SRC,ref ret);
+							//Console.WriteLine("BASS_ATTRIB_SRC_NEW " + ret);
+
+							if ((int)ret != sincPoints)
+							{
+								throw new ApplicationException("Failed to set number of Sinc Interpolation Points");
+							}
+						}
+							
+
 #if DEBUG
                         Console.WriteLine("sampleRate "+ sampleRate+ "   sampleLength "+ sampleLength);
                         Console.WriteLine("bassChannelInfo.freq " + bassChannelInfo.freq);
