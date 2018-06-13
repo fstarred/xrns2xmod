@@ -157,20 +157,10 @@ namespace Xrns2XMod
              * C3 214 -> 16726.846 Hz
              */
 
-            const int NtscC2Frequency = 8363;
-            const int PalC2Frequency = 8287;
-			const int NtscC3Frequency = 16727;
-			const int PalC3Frequency = 16574;
-			const int NtscB3Frequency = 31677;
-			const int PalB3Frequency = 31388;
-			const int NtscA3Frequency = 28185;
-			const int PalA3Frequency = 27928;
-
-            int freqC2 = Settings.NtscMode ? NtscC2Frequency : PalC2Frequency;
-			int freqC3 = Settings.NtscMode ? NtscC3Frequency : PalC3Frequency;
-			int freqB3 = Settings.NtscMode ? NtscB3Frequency : PalB3Frequency;
-			int freqA3 = Settings.NtscMode ? NtscA3Frequency : PalA3Frequency;
-			int freqMax = Settings.ForceProTrackerCompatibility == PROTRACKER_COMPATIBILITY_MODE.A3MAX ? freqA3 : freqB3;
+			const float PalFreq = 7093789.2f;
+			const float NtscFreq = 7159090.0f;
+			float SysFreq = Settings.NtscMode ? NtscFreq : PalFreq;
+			int noteIndexMax = (Settings.ForceProTrackerCompatibility == PROTRACKER_COMPATIBILITY_MODE.A3MAX) ? ModUtils.NOTE_VALUE_A3 : ModUtils.NOTE_VALUE_B3;
 
             const int maxSampleLengthMOD = 65536;
 
@@ -200,7 +190,7 @@ namespace Xrns2XMod
 
             for (int ci = 0; ci < totalInstruments; ci++)
             {
-                OnReportProgress(new EventReportProgressArgs(String.Format("Processing Sample {0}/{1}", (ci + 1), totalInstruments)));
+				OnReportProgress(new EventReportProgressArgs(String.Format("Processing Sample {0}/{1} - {2}", (ci + 1), totalInstruments, instruments[ci].Name)));
 
                 if (instruments[ci].Samples.Length > 1)
                 {
@@ -235,43 +225,53 @@ namespace Xrns2XMod
                         // samplerate may be:
                         // 1) same as original
                         // 2) taken from song settings
-                        int sampleRate = freqC2;
+                        int sampleRate;
                         
-                        int freqFromIni = instruments[ci].Samples[0].SampleFreq;
+                        string freqFromIniStr = instruments[ci].Samples[0].SampleFreq;
+
+						int freqFromIni=0;
+						int noteIndex=0;
+						int period=0;
+
+						if (freqFromIniStr.Equals("Low"))
+							noteIndex = ModUtils.NOTE_VALUE_C2;
+						else if (freqFromIniStr.Equals ("High"))
+							noteIndex = ModUtils.NOTE_VALUE_C3;
+						else if (freqFromIniStr.Equals ("Maximum") || freqFromIniStr.Equals("Max"))
+							noteIndex = noteIndexMax;
+						else if (freqFromIniStr.Equals ("Original"))
+							freqFromIni = bassChannelInfo.freq;
+						else
+						{
+							if (freqFromIniStr.Length == 3)
+							{
+								period = modUtils.GetModNote(freqFromIniStr);
+
+							}
+							else
+								freqFromIni = int.Parse(freqFromIniStr);
+						}
+
 
                         if (freqFromIni > 0)
                         {
 							sampleRate = freqFromIni;
 							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency manually adjusted to: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
                         }
-						else if (freqFromIni == IniWrapper.C3_BASE_FREQUENCY)
+						else if (noteIndex > 0)
 						{
-							sampleRate = freqC3;
-							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to C3 frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
-
+							sampleRate = (int)Math.Round(SysFreq / (ModUtils.PeriodsRange[noteIndex] * 2));
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency manually adjusted from {2} to: {1} Hz", (ci + 1), sampleRate, freqFromIniStr), MsgType.INFO));
 						}
-						else if (freqFromIni == IniWrapper.C2_BASE_FREQUENCY)
+						else if (period > 0)
 						{
-							sampleRate = freqC2;
-							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to C2 frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
-						}
-						else if (freqFromIni == IniWrapper.PROTRACKER_MAXIMUM_FREQUENCY)
-						{
-							//Use the maximum possible frequency or the original one as upsampling doesn't makes sense.
-							if (bassChannelInfo.freq > freqMax)
-							{
-								sampleRate = freqMax;
-								OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to maximum frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
-							}
-							else
-							{
-								sampleRate=bassChannelInfo.freq;
-								OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency is original sample frequency: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
-							}
+							sampleRate = (int)Math.Round(SysFreq / ((float)period * 2.0f));
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency manually adjusted from note value {2} to: {1} Hz", (ci + 1), sampleRate, freqFromIniStr), MsgType.INFO));
 						}
                         else
                         {
-							sampleRate = freqC2;
+							noteIndex = ModUtils.NOTE_VALUE_C2;
+							sampleRate = (int)Math.Round(SysFreq / (ModUtils.PeriodsRange[noteIndex] * 2));
 							OnReportProgress (new EventReportProgressArgs (String.Format ("Sample {0} frequency defaults to C2 frequency {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
                             
                         }
@@ -328,7 +328,7 @@ namespace Xrns2XMod
 
                         if (stream.Length > maxSampleLengthMOD)
                         {
-                            throw new ApplicationException(String.Format("Sample number {0} is too large: max size for mod is {1}", (ci + 1), maxSampleLengthMOD));
+							throw new ApplicationException(String.Format("Sample number {0} is too large: max size for mod is {1}. Current length is {2}", (ci + 1), maxSampleLengthMOD, stream.Length));
                         }
 
                         // sample data will be stored only if sample doesn't exceed length of 65536 bytes

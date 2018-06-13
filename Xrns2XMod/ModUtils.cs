@@ -60,7 +60,7 @@ namespace Xrns2XMod
             
         }
         
-        private static readonly int[] PeriodsRange = 
+        public static readonly int[] PeriodsRange = 
         { 
             1712,1616,1524,1440,1356,1280,1208,1140,1076,1016,960,907,                
 	        856,808,762,720,678,640,604,570,538,508,480,453, // standard pro tracker tunes (Amiga freq.)
@@ -70,12 +70,12 @@ namespace Xrns2XMod
 	        53,50,47,45,42,40,37,35,33,31,30,28 
         };
 
-		const int NOTE_VALUE_C1 = 12;
-		const int NOTE_VALUE_C2 = 24;
-		const int NOTE_VALUE_C3 = 36;
-		const int NOTE_VALUE_A3 = 45;
-		const int NOTE_VALUE_B3 = 47;
-
+		public const int NOTE_VALUE_C1 = 12;
+		public const int NOTE_VALUE_C2 = 24;
+		public const int NOTE_VALUE_C3 = 36;
+		public const int NOTE_VALUE_A3 = 45;
+		public const int NOTE_VALUE_B3 = 47;
+		public const int NOTE_VALUE_C4 = 48;
 
         protected InstrumentDataMOD[] instrumentsList;
 
@@ -179,6 +179,13 @@ namespace Xrns2XMod
             return output;            
         }
 
+		public bool isNoteInPeriodRange(int noteIndex)
+		{
+			bool inRange = (noteIndex >= 0 && noteIndex < PeriodsRange.Length);
+
+			return inRange;
+		}
+
 		public bool isNoteInRange(int noteIndex)
 		{
 			bool inRange = (noteIndex >= 0 && noteIndex < PeriodsRange.Length);
@@ -191,6 +198,39 @@ namespace Xrns2XMod
 				inRange = false;
 
 			return inRange;
+		}
+
+		public int GetModNote(string note)
+		{
+			int value = 0;
+
+			string tune = note.Substring(0, 2);
+
+			// useful for finding an item into an array
+			int originalNoteIndex = Array.FindIndex(notesArray, delegate(string item)
+				{
+					return item.Equals(tune);
+				});
+			if (originalNoteIndex >= 0)
+			{
+				int octave = Int16.Parse(note.Substring(2, 1));
+
+				int noteIndex = (octave) * 12 + originalNoteIndex;
+
+				if (isNoteInPeriodRange(noteIndex))
+				{
+					value = PeriodsRange[noteIndex];
+
+					// debug
+					//Console.WriteLine(String.Format("Note:  Period: {0} ModNote: {1}  String: {2}", value, noteIndex, note));
+				}
+				else
+				{
+					throw new ConversionException(String.Format("note {0} is out of range (can be fixed by changing sample frequency)", note));
+				}
+			}
+
+			return value;
 		}
 
 

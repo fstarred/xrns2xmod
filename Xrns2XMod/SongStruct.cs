@@ -57,7 +57,7 @@ public struct InstrumentData
 public struct SampleData
 {
     public byte DefaultVolume { get; set; } 
-    public int SampleFreq { get; set; } // handled by Ini settings
+    public string SampleFreq { get; set; } // handled by Ini settings
 	public int SincInterpolationPoints { get; set; } // windowed sinc interpolation points, handled by Ini settings
     public sbyte Transpose { get; set; }
     public string Name { get; set; }

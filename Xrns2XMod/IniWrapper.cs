@@ -27,10 +27,6 @@ namespace Xrns2XMod
 
         #region Constructor
 
-		public const int C2_BASE_FREQUENCY				= -1;
-		public const int C3_BASE_FREQUENCY 				= -2;
-		public const int PROTRACKER_MAXIMUM_FREQUENCY	= -3;
-
         public IniWrapper(string xrnsFile, bool forceCreateIni)
         {
             Assembly assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
@@ -104,7 +100,7 @@ namespace Xrns2XMod
         }
 
 
-        public int ReadFreqSample(int instrument, int sample)
+        public String ReadFreqSample(int instrument, int sample)
         {
             string value = null;
             //if (Utility.IsWindowsOS())
@@ -114,14 +110,8 @@ namespace Xrns2XMod
 
             value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "0");
 
-			if (value.Equals("Low") || value.Equals("C2"))
-                return C2_BASE_FREQUENCY;
-			else if (value.Equals ("High") || value.Equals("C3"))
-				return C3_BASE_FREQUENCY;
-			else if (value.Equals ("Maximum") || value.Equals("Max"))
-				return PROTRACKER_MAXIMUM_FREQUENCY;
-            else
-                return int.Parse(value);
+			return value;
+
         }
 
 		public int ReadSincInterpolationPoints(int instrument, int sample)
