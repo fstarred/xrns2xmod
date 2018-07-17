@@ -233,7 +233,9 @@ namespace Xrns2XMod
 						int noteIndex=0;
 						int period=0;
 
-						if (freqFromIniStr.Equals("Low"))
+						if (freqFromIniStr == null) //the default case is C2 if no settings are provided
+							noteIndex = ModUtils.NOTE_VALUE_C2;
+						else if (freqFromIniStr.Equals("Low"))
 							noteIndex = ModUtils.NOTE_VALUE_C2;
 						else if (freqFromIniStr.Equals ("High"))
 							noteIndex = ModUtils.NOTE_VALUE_C3;
