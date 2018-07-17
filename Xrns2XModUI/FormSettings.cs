@@ -19,7 +19,8 @@ namespace Xrns2XModUI
             //chkVolumeResampling.Checked = Settings.Default.VolumeScalingMode; 
             //nudFPL.Value = Settings.Default.ExtraFinePitchValue;
             //nudFVL.Value = Settings.Default.ExtraFineVolumeValue;
-            this.chkNotesLimit.Checked = Settings.Default.PTCompatibiliy;
+            //this.chkNotesLimit.Checked = Settings.Default.PTCompatibiliy; //FIXME
+
             this.nudPortamentoLossThreshold.Value = Settings.Default.PortamentoLossTreshold;
 
             this.checkBoxProxy.Checked = Xrns2XModUI.Properties.Settings.Default.ProxyEnabled;
@@ -55,7 +56,7 @@ namespace Xrns2XModUI
             //Settings.Default.ExtraFinePitchValue = (int)nudFPL.Value;
             //Settings.Default.ExtraFineVolumeValue = (int)nudFVL.Value;
             Settings.Default.VolumeScalingMode = (Xrns2XMod.VOLUME_SCALING_MODE)Enum.Parse(typeof(Xrns2XMod.VOLUME_SCALING_MODE), cbVolumeScaling.SelectedItem.ToString());
-            Settings.Default.PTCompatibiliy = chkNotesLimit.Checked;
+            //Settings.Default.PTCompatibiliy = chkNotesLimit.Checked;
             Settings.Default.PortamentoLossTreshold = (int)nudPortamentoLossThreshold.Value;
 
             Xrns2XMod.Properties.Settings.Default.Save();            

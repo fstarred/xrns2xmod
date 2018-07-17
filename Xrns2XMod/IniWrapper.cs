@@ -75,14 +75,14 @@ namespace Xrns2XMod
             configSection.Set(string.Format("{0}/{1}", instrument, sample), value.ToString());
         }
 
-        public void SaveNewFreqSample(int instrument, int sample, int value)
+        public void SaveNewFreqSample(int instrument, int sample, string value)
         {
             //if (Utility.IsWindowsOS())
             //    IniFile.IniWriteValue("frequency", string.Format("{0}/{1}", instrument, sample), value.ToString(), IniPath);
 
             IConfig configSection = configSource.Configs["frequency"];
 
-            configSection.Set(string.Format("{0}/{1}", instrument, sample), value.ToString());
+            configSection.Set(string.Format("{0}/{1}", instrument, sample), value);
         }
 
         public int ReadDefaultVolumeSample(int instrument, int sample)
