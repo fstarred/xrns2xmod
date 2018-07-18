@@ -87,14 +87,16 @@ namespace Xrns2XMod
 
         public int ReadDefaultVolumeSample(int instrument, int sample)
         {
-            string value = null;
+            const string defaultValue = "64";
+
+            string value;
 
             //if (Utility.IsWindowsOS())			
             //    value = IniFile.IniReadValue("volume", string.Format("{0}/{1}", instrument, sample), IniPath);
 
             IConfig configSection = configSource.Configs["volume"];
 
-            value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "64");
+            value = configSection?.Get(string.Format("{0}/{1}", instrument, sample), defaultValue) ?? defaultValue;
 
             return int.Parse(value);
         }
@@ -102,13 +104,15 @@ namespace Xrns2XMod
 
         public String ReadFreqSample(int instrument, int sample)
         {
-            string value = null;
+            const string defaultValue = "0";
+
+            string value;
             //if (Utility.IsWindowsOS())
             //    value = IniFile.IniReadValue("frequency", string.Format("{0}/{1}", instrument, sample), IniPath);
 
             IConfig configSection = configSource.Configs["frequency"];
 
-            value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "0");
+            value = configSection?.Get(string.Format("{0}/{1}", instrument, sample), defaultValue) ?? defaultValue;
 
 			return value;
 
@@ -116,13 +120,16 @@ namespace Xrns2XMod
 
 		public int ReadSincInterpolationPoints(int instrument, int sample)
 		{
-			string value = null;
 			//if (Utility.IsWindowsOS())
-			//    value = IniFile.IniReadValue("frequency", string.Format("{0}/{1}", instrument, sample), IniPath);
+            //    value = IniFile.IniReadValue("frequency", string.Format("{0}/{1}", instrument, sample), IniPath);
 
-			IConfig configSection = configSource.Configs["sinc"];
+            const string defaultValue = "2";
 
-			value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "2");
+            string value;
+
+            IConfig configSection = configSource.Configs["sinc"];
+
+            value = configSection?.Get(string.Format("{0}/{1}", instrument, sample), defaultValue) ?? defaultValue;
 
 			return int.Parse(value);
 		}
