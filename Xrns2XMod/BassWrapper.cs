@@ -15,8 +15,14 @@ namespace Xrns2XMod
         static int testCnt = 0;
 #endif
 
+		private static bool isInitialized = false;
+
         public static void InitResources(IntPtr win, string bassEmail, string bassCode)
         {
+			//This function shall only be executed once! At least NUnit has a problem if executed multiple times.
+			if (isInitialized)
+				return;
+			
             string targetPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             //if (Utils.Is64Bit)
@@ -42,6 +48,7 @@ namespace Xrns2XMod
             if (!isBassInit)
                 throw new ApplicationException("Some errors occurred while initializing audio dll");
 
+			isInitialized = true;
         }
 
         /// <summary>
@@ -54,14 +61,14 @@ namespace Xrns2XMod
             int handle;
 
 #if DEBUG
-            Console.WriteLine ("GetBassTream " + testCnt + " "+ input.Stream.Length);
+            Console.WriteLine ("getBassStream " + testCnt + " "+ input.Stream.Length);
 #endif
             Stream stream = input.Stream;
 
 #if DEBUG
             stream.Seek(0, System.IO.SeekOrigin.Begin);
 
-            using (FileStream file = new FileStream("getBassStream"+testCnt+".bin", FileMode.Create, System.IO.FileAccess.Write))
+            using (FileStream file = new FileStream("getBassStream "+testCnt+".bin", FileMode.Create, System.IO.FileAccess.Write))
                 stream.CopyTo(file);
 #endif			
             stream.Seek (0, System.IO.SeekOrigin.Begin);
