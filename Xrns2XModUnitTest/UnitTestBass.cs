@@ -1,16 +1,11 @@
 ﻿
+using NUnit.Framework;
 using System;
-using System.Linq;
-using System.Reflection;
 using System.IO;
 using System.Runtime.InteropServices;
-
-using NUnit.Framework;
-using Xrns2XMod;
 using Un4seen.Bass;
-using Un4seen.Bass.AddOn.Aac;
-using Un4seen.Bass.AddOn.Flac;
 using Un4seen.Bass.AddOn.Mix;
+using Xrns2XMod;
 
 
 namespace Xrns2XModUnitTest
