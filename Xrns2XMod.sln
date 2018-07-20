@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xrns2XMod", "Xrns2XMod\Xrns2XMod.csproj", "{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}"
@@ -19,30 +19,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|x64.ActiveCfg = Debug|x64
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|x64.Build.0 = Debug|x64
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|x64.ActiveCfg = Debug|x64
-		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|x64.Build.0 = Debug|x64
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|x64.Build.0 = Debug|Any CPU
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|x64.ActiveCfg = Release|Any CPU
-		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|x64.Build.0 = Release|Any CPU
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|x64.ActiveCfg = Debug|x64
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|x64.Build.0 = Debug|x64
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|x64.ActiveCfg = Debug|x64
-		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|x64.Build.0 = Debug|x64
 		{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}.Debug|x64.ActiveCfg = Debug|x64
@@ -51,10 +27,40 @@ Global
 		{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}.Release|x64.ActiveCfg = Debug|x64
 		{AB5FF1DC-EA99-4C7A-A980-AD51FBD2B502}.Release|x64.Build.0 = Debug|x64
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|x64.ActiveCfg = Debug|x64
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Debug|x64.Build.0 = Debug|x64
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|x64.ActiveCfg = Debug|x64
+		{15D18276-4A70-41EA-A01B-55E18EC14F1B}.Release|x64.Build.0 = Debug|x64
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|x64.ActiveCfg = Debug|x64
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Debug|x64.Build.0 = Debug|x64
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|x64.ActiveCfg = Debug|x64
+		{66C942C2-D6A7-4FD5-A071-F317E983794F}.Release|x64.Build.0 = Debug|x64
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|x64.ActiveCfg = Debug|x64
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Debug|x64.Build.0 = Debug|x64
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|x64.ActiveCfg = Release|Any CPU
+		{5AB652C4-09AD-4441-AF29-519135A02869}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DCB99448-8372-4599-B33F-194DA0B4BA38}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0
-		$0.TextStylePolicy = $1
+		$0.TextStylePolicy = $3
 		$1.inheritsSet = null
 		$1.scope = text/x-csharp
 		$0.CSharpFormattingPolicy = $2
@@ -62,16 +68,9 @@ Global
 		$2.inheritsSet = Mono
 		$2.inheritsScope = text/x-csharp
 		$2.scope = text/x-csharp
-		$0.TextStylePolicy = $3
 		$3.FileWidth = 120
 		$3.inheritsSet = VisualStudio
 		$3.inheritsScope = text/plain
 		$3.scope = text/plain
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DCB99448-8372-4599-B33F-194DA0B4BA38}
 	EndGlobalSection
 EndGlobal
