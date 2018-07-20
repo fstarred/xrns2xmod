@@ -158,11 +158,8 @@ namespace Xrns2XModUnitTest
                     writerRaw.Write (buffer2 [i]);
                 }
             }
-
-            byte[] buffer3 = new byte[2000];
-            Buffer.BlockCopy (buffer2, 0, buffer3, 0, totalDataWritten);
-
-            string hashGen = MD5Utils.GenerateMd5Hash (buffer3);
+                
+            string hashGen = MD5Utils.GenerateMd5Hash (buffer2);
 
             Bass.BASS_StreamFree (handle);
             Bass.BASS_StreamFree (mixer);
@@ -193,11 +190,9 @@ namespace Xrns2XModUnitTest
             _hGCFile = GCHandle.Alloc (buffer, GCHandleType.Pinned);
 
             int handle = Bass.BASS_StreamCreate (44100, 1, BASSFlag.BASS_STREAM_DECODE, BASSStreamProc.STREAMPROC_PUSH);
-
             int ret = Bass.BASS_StreamPutData (handle, _hGCFile.AddrOfPinnedObject (), buffer.Length * sizeof(short) | (int)BASSStreamProc.BASS_STREAMPROC_END);
 
             Assert.AreEqual (buffer.Length * sizeof(short), ret);
-
 
             //-- 2. Mix it
             int mixer = BassMix.BASS_Mixer_StreamCreate (11025, 1, BASSFlag.BASS_STREAM_DECODE | BASSFlag.BASS_SAMPLE_8BITS);
@@ -216,15 +211,18 @@ namespace Xrns2XModUnitTest
             Console.WriteLine ("totalDataWritten " + totalDataWritten);
 
             using (BinaryWriter writerRaw = new BinaryWriter (File.Open ("test3_out_sine_11025_8.raw", FileMode.Create))) {
-                for (uint i = 0; i < totalDataWritten / 2; i++) {
+                for (uint i = 0; i < totalDataWritten; i++) {
                     writerRaw.Write (buffer2 [i]);
                 }
             }
 
-            byte[] buffer3 = new byte[2000];
-            Buffer.BlockCopy (buffer2, 0, buffer3, 0, totalDataWritten);
-
-            string hashGen = MD5Utils.GenerateMd5Hash (buffer3);
+            for (uint i = 0; i < 32; i+=8)
+                Console.WriteLine ("{0} {1:X2} {2:X2} {3:X2} {4:X2} {5:X2} {6:X2} {7:X2} {8:X2}",i,
+                    buffer2[i],buffer2[i+1],buffer2[i+2],buffer2[i+3],
+                    buffer2[i+4],buffer2[i+5],buffer2[i+6],buffer2[i+7]
+                );
+            
+            string hashGen = MD5Utils.GenerateMd5Hash (buffer2);
 
             Bass.BASS_StreamFree (handle);
             Bass.BASS_StreamFree (mixer);
