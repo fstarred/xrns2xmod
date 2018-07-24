@@ -24,6 +24,7 @@ namespace Xrns2XModUnitTest
                 BassWrapper.InitResources (IntPtr.Zero, null, null);
             } catch (Exception e) {
                 Console.WriteLine (e.Message);
+				Console.WriteLine (e.StackTrace);
             }
         }
 
@@ -159,7 +160,7 @@ namespace Xrns2XModUnitTest
             Bass.BASS_StreamFree (handle);
             Bass.BASS_StreamFree (mixer);
 
-            Assert.AreEqual ("unknown", hashGen);
+			Assert.AreEqual ("50bce9c536e98667534747f0a5f06ebd", hashGen);
         }
 
         [Test]
@@ -170,7 +171,7 @@ namespace Xrns2XModUnitTest
 
             short[] buffer = new short[sampleLength];
             for (int i = 0; i < sampleLength; i++) {
-                buffer [i] = (sbyte)(30000.0f * Math.Sin (((float)i / (float)sampleLength) * (Math.PI * 2.0f)));
+				buffer [i] = (short)(30000.0f * Math.Sin (((float)i / (float)sampleLength) * (Math.PI * 2.0f)));
             }
 
             using (BinaryWriter writerRaw = new BinaryWriter (File.Open ("test3_in_sine_44100_16.raw", FileMode.Create))) {
@@ -210,20 +211,13 @@ namespace Xrns2XModUnitTest
                     writerRaw.Write (buffer2 [i]);
                 }
             }
-
-            for (uint i = 0; i < 32; i+=8)
-                Console.WriteLine ("{0} {1:X2} {2:X2} {3:X2} {4:X2} {5:X2} {6:X2} {7:X2} {8:X2}",i,
-                    buffer2[i],buffer2[i+1],buffer2[i+2],buffer2[i+3],
-                    buffer2[i+4],buffer2[i+5],buffer2[i+6],buffer2[i+7]
-                );
-            
+				
             string hashGen = MD5Utils.GenerateMd5Hash (buffer2);
 
             Bass.BASS_StreamFree (handle);
             Bass.BASS_StreamFree (mixer);
 
-            Assert.AreEqual ("unknown", hashGen);
-
+			Assert.AreEqual ("8303df5b4a649645690fc87489b0f6e0", hashGen);
         }
 
 

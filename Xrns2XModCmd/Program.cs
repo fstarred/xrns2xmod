@@ -34,8 +34,6 @@ namespace Xrns2XModCmd
         {
             int retcode = 0;
 
-			Console.WriteLine(args);
-
             try
             {
                 string destType = "xm";

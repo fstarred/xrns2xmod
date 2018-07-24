@@ -38,6 +38,7 @@ namespace Xrns2XModUnitTest
         public void ConversionTest (string path, string hash)
         {
             songDataFactory = new SongDataFactory ();
+			songDataFactory.ReportProgress += ReportProgress;
 
             //Console.WriteLine("ConversionTest....");
 
@@ -45,7 +46,9 @@ namespace Xrns2XModUnitTest
             string input = "resources/examples/" + path;
             RenoiseSong renoiseSong = songDataFactory.ExtractRenoiseSong (input);
             songData = songDataFactory.ExtractSongData (renoiseSong, input);
+
             converter = new ModConverter (input);
+			converter.EventProgress += ReportProgress;
 
             settings = new ModSettings ();
             settings.ForceProTrackerCompatibility = PROTRACKER_COMPATIBILITY_MODE.NONE;
@@ -53,7 +56,7 @@ namespace Xrns2XModUnitTest
             settings.PortamentoLossThreshold = 2;
             settings.VolumeScalingMode = VOLUME_SCALING_MODE.SAMPLE;
 
-            converter.EventProgress += ReportProgress;
+            
 
             converter.Settings = settings;
 
@@ -169,5 +172,13 @@ namespace Xrns2XModUnitTest
         {
             ConversionTest ("test_volume_column.xrns", "0e31af884e4b81dfdf574e1da82a6fad");
         }
+
+		[Test]
+		public void SincInterpolation ()
+		{
+			ConversionTest ("test_sample_sinc.xrns", "b952f3aa0dfeefae2fb6e975c57ba6ed");
+		}
+
+
     }
 }

@@ -34,6 +34,7 @@ namespace Xrns2XModUnitTest
         public void ConversionTest (string path, string hash)
         {
             songDataFactory = new SongDataFactory ();            
+			songDataFactory.ReportProgress += ReportProgress;
 
             string input = "resources/examples/" + path;
             
@@ -80,105 +81,106 @@ namespace Xrns2XModUnitTest
         [Test]
         public void AdjustSampleFrequency ()
         {
-            ConversionTest ("test_adjust_sample_frequency.xrns", "52e02bc86985f0f83435aca9ee62efe5");
-        }
+			ConversionTest ("test_adjust_sample_frequency.xrns", "98ffd26ebce463439a0e544a020289d4");
+		}
 
         [Test]
         public void DefaultVolume ()
         {
-            ConversionTest ("test_default_volume.xrns", "6774ec1c292beece37a04fc17ac2e45a");
+			ConversionTest ("test_default_volume.xrns", "8c2e69e9c96d0b6df4ece91306b43304");
         }
 
         [Test]
         public void DelayColumn ()
         {
-            ConversionTest ("test_delay_column.xrns", "f67a94b3a54bae37d663c05ff4502001");
+			ConversionTest ("test_delay_column.xrns", "ac5c9f2d6ac31564ccfe3c12274875e2");
         }
 
         [Test]
         public void FadeVolumeCompatibilityTrick ()
         {
-            ConversionTest ("test_fade_volume_compatibility_trick.xrns", "0c79bbb58ff4a8e9e1a4c958c6dacd27");
+			ConversionTest ("test_fade_volume_compatibility_trick.xrns", "ce0d0185fcf148ffe80d5fd615ab911f");
         }
 
         [Test]
-        public void FT2Mode ()
+		public void FT2Mode ()
         {
-            ConversionTest ("test_ft2_mode.xrns", "1a8ecc9dee9a3678ee4224cc9c346430");
+			ConversionTest ("test_ft2_mode.xrns", "259feb4a31eebc4545c7ed217193adfc");
         }
 
         [Test]
-        public void GlobalCommands ()
+		public void GlobalCommands ()
         {
-            ConversionTest ("test_global_commands.xrns", "fc1c3b52e9d722901670049401320e93");
+			ConversionTest ("test_global_commands.xrns", "a1a9f3754d0298aa791b636a8b5ac60c");
         }
 
         [Test]
         public void GlobalVolumeXmCommands ()
         {
-            ConversionTest ("test_global_volume_xm_commands.xrns", "ae1df1b1cf5a16a7d35cc20624d7fe51");
+			ConversionTest ("test_global_volume_xm_commands.xrns", "223815be794edc61871a79c285dcd80b");
         }
 
         [Test]
         public void InstrumentEnvelopes ()
         {
-            ConversionTest ("test_instrument_envelopes.xrns", "7c741e1f44514bc4a94b90bc0849d54e");
+			ConversionTest ("test_instrument_envelopes.xrns", "233130acf3cc3b28f42b00b56e403c5c");
         }
 
         [Test]
         public void InstrumentKeymap ()
         {
-            ConversionTest ("test_instrument_keymap.xrns", "5e746efcc1493974a218b1ede021dde7");
+			ConversionTest ("test_instrument_keymap.xrns", "193f232d955d07ac27c0bd6793b28dec");
         }
 
         [Test]
         public void InstrumentsCommands ()
         {
-            ConversionTest ("test_instruments_commands.xrns", "3c450c54fa62f6e7a00a6587203c2988");
+			ConversionTest ("test_instruments_commands.xrns", "a4949e2d65bce6c29ca4a95e8456f8b9");
         }
 
         [Test]
         public void MultiColumns ()
         {
-            ConversionTest ("test_multi_columns.xrns", "aacd817279de9c55add5f4a5f05736cf");
+			ConversionTest ("test_multi_columns.xrns", "fe062d09adc179dd38f4152dfc2c018a");
         }
 
         [Test]
         public void PanningColumn ()
         {
-            ConversionTest ("test_panning_column.xrns", "4107eed8586d6b0395fa03570ead5a74");
+			ConversionTest ("test_panning_column.xrns", "6e058660aaf84f69fa0c5e8c0fe52d91");
         }
 
         [Test]
         public void RenoiseStandardTPLMode ()
         {
-            ConversionTest ("test_renoise_standard_tpl_mode.xrns", "a9cf4bb798ba9d472021a8a8bca598ae");
+			ConversionTest ("test_renoise_standard_tpl_mode.xrns", "494c2ce8d03e1774c92401ca2bd482d4");
         }
 
         [Test]
         public void SampleCommands ()
         {
-            ConversionTest ("test_sample_commands.xrns", "0d559b8c089e83e3788e4d95d5d877fd");
+			ConversionTest ("test_sample_commands.xrns", "36ecf7ec6aa674574b88623870a3f692");
         }
 
         [Test]
         public void TickCommands ()
         {
-            ConversionTest ("test_tick_commands.xrns", "513cab45a102ac003cd754a54c8ef14a");
+			ConversionTest ("test_tick_commands.xrns", "373b612b604d514c653468d70cbd51d2");
         }
 
 
         [Test]
         public void VolumeColumn ()
         {
-            ConversionTest ("test_volume_column.xrns", "c89468b202520aa6dfec2224cfdffedc");
+			ConversionTest ("test_volume_column.xrns", "001cfe7fc3063ed7a1f878c9de538688");
         }
 
         [Test]
         public void VolumeScalingMode ()
         {
-            ConversionTest ("test_volume_scaling_mode.xrns", "04f4ae7c82e87c5382c28fc1ef438600");
+			ConversionTest ("test_volume_scaling_mode.xrns", "eaec9b7acfb06cb203ef0e94324401a0");
         }
+
 
     }
 }
