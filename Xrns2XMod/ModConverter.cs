@@ -297,14 +297,7 @@ namespace Xrns2XMod
 								throw new ApplicationException("Failed to set number of Sinc Interpolation Points");
 							}
 						}
-							
 
-#if DEBUG
-                        Console.WriteLine("sampleRate "+ sampleRate+ "   sampleLength "+ sampleLength);
-                        Console.WriteLine("bassChannelInfo.freq " + bassChannelInfo.freq);
-                        Console.WriteLine("bassChannelInfo.chans " + bassChannelInfo.chans);
-                        Console.WriteLine("origres " + origres);
-#endif
                         //Enforce 16 Bit Samples here as 8 Bit samples are corrupted (only on Linux?).
                         //The 8 least significant bits are removed later.
                         int mixer = BassWrapper.PlugChannelToMixer (handle, sampleRate, 1, 16);

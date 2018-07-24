@@ -11,10 +11,6 @@ namespace Xrns2XMod
 {
     public static class BassWrapper
     {
-#if DEBUG
-        static int testCnt = 0;
-#endif
-
 		private static bool isInitialized = false;
 
         public static void InitResources(IntPtr win, string bassEmail, string bassCode)
@@ -37,10 +33,16 @@ namespace Xrns2XMod
 
             if (Utility.IsWindowsOS())
             {
+#if __MonoCS__
+				//mono specific code for linux. LoadMe is not available and not needed.
+#else 
+				//for Windows
                 Bass.LoadMe();
                 BassMix.LoadMe();
                 BassFlac.LoadMe();
                 BassAac.LoadMe();
+#endif
+                
             }
 
             bool isBassInit = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, win);
@@ -49,6 +51,7 @@ namespace Xrns2XMod
                 throw new ApplicationException("Some errors occurred while initializing audio dll");
 
 			isInitialized = true;
+
         }
 
         /// <summary>
@@ -60,17 +63,8 @@ namespace Xrns2XMod
         {
             int handle;
 
-#if DEBUG
-            Console.WriteLine ("getBassStream " + testCnt + " "+ input.Stream.Length);
-#endif
             Stream stream = input.Stream;
-
-#if DEBUG
-            stream.Seek(0, System.IO.SeekOrigin.Begin);
-
-            using (FileStream file = new FileStream("getBassStream "+testCnt+".bin", FileMode.Create, System.IO.FileAccess.Write))
-                stream.CopyTo(file);
-#endif			
+				
             stream.Seek (0, System.IO.SeekOrigin.Begin);
 
             byte[] buffer = Utility.GetBytesFromStream(stream, stream.Length);
@@ -175,15 +169,6 @@ namespace Xrns2XMod
             // total data written to the new byte[] buffer
             int totalDataWritten = Bass.BASS_ChannelGetData(handle, buffer, (int)sampleLength);
 
-#if DEBUG
-            using (BinaryWriter writerRaw = new BinaryWriter (File.Open ("fileRaw" + testCnt + ".bin", FileMode.Create)))
-            {
-                for (uint i = 0; i < totalDataWritten; i++)
-                {
-                    writerRaw.Write(buffer[i]);
-                }
-            }
-#endif
             MemoryStream inputSample = new MemoryStream(buffer);
 
             MemoryStream outputStream = new MemoryStream();
@@ -191,16 +176,6 @@ namespace Xrns2XMod
             BinaryReader reader = new BinaryReader(inputSample);
 
             BinaryWriter writer = new BinaryWriter(outputStream);
-
-#if DEBUG
-            Console.WriteLine ("sampleLen " + sampleLength);
-            testCnt++;
-
-            BinaryWriter writer2 = new BinaryWriter (File.Open ("fileB" + testCnt + ".bin", FileMode.Create));
-            BinaryWriter writer3 = new BinaryWriter (File.Open ("fileD" + testCnt + ".bin", FileMode.Create));
-            inputSample.Seek(0, SeekOrigin.Begin);
-            inputSample.Seek (0, SeekOrigin.Begin);
-#endif
 
             // Amiga ProTracker compatibility
             // all samples with no loop should begin with two bytes of 0 value (Thanks to Jojo of OpenMPT for the hints)            
@@ -215,22 +190,14 @@ namespace Xrns2XMod
 
                 inputSample.Seek(0, SeekOrigin.Begin);
             }
-#if DEBUG
-            Console.WriteLine ("totalDataWritten " + totalDataWritten);
-#endif
+
             for (uint i = 0; i < totalDataWritten; i += 2)
             {
                 short value = reader.ReadInt16 ();
                 sbyte newValue = (sbyte)(value / 256);
                 writer.Write (newValue);
-#if DEBUG
-                writer2.Write (newValue);
-#endif
             }
-#if DEBUG
-    		writer2.Close();
-    		writer3.Close();
-#endif
+
             // sample length must be even, because its value is stored divided by 2
 			if (outputStream.Length % 2 != 0)
             {
@@ -265,17 +232,20 @@ namespace Xrns2XMod
 
             // add channel to mixer
             bool isMixerGood = BassMix.BASS_Mixer_StreamAddChannel(mixer, handle, BASSFlag.BASS_MIXER_NORAMPIN);
-#if DEBUG
-            Console.WriteLine (freq + " "+chans+" "+res+" isMixerGood " + isMixerGood);
-#endif
             return mixer;
         }        
 
         public static void FreeResources()
         {
-            Bass.FreeMe();
-            BassMix.FreeMe();
-            BassFlac.FreeMe();
+#if __MonoCS__
+			//mono specific code for linux. FreeMe is not available and not needed.
+#else 
+			//for Windows
+			Bass.FreeMe();
+			BassMix.FreeMe();
+			BassFlac.FreeMe();
+#endif
+
 
         }
     }
