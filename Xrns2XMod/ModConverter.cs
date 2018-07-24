@@ -297,11 +297,9 @@ namespace Xrns2XMod
 								throw new ApplicationException("Failed to set number of Sinc Interpolation Points");
 							}
 						}
-
-                        //Enforce 16 Bit Samples here as 8 Bit samples are corrupted (only on Linux?).
-                        //The 8 least significant bits are removed later.
-                        int mixer = BassWrapper.PlugChannelToMixer (handle, sampleRate, 1, 16);
-
+							
+                        int mixer = BassWrapper.PlugChannelToMixer (handle, sampleRate, 1, 8);
+						
                         if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instruments[ci].Samples[0].Volume != 1.0f)
                         {
                             OnReportProgress(new EventReportProgressArgs(String.Format("Ramping sample volume to value {0}", instruments[ci].Samples[0].Volume)));

@@ -177,26 +177,28 @@ namespace Xrns2XMod
 
             BinaryWriter writer = new BinaryWriter(outputStream);
 
+			// BASS gives us unsigned 8 bit sample data. we need signed one!
+
             // Amiga ProTracker compatibility
             // all samples with no loop should begin with two bytes of 0 value (Thanks to Jojo of OpenMPT for the hints)            
 			if (ptCompatibility != PROTRACKER_COMPATIBILITY_MODE.NONE)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    short value = reader.ReadInt16();
-                    if (value != 0)
-                        writer.Write ((sbyte)0);
-                }
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					byte value = reader.ReadByte();
+					if (value != 128)
+						writer.Write(0);
+				}
 
-                inputSample.Seek(0, SeekOrigin.Begin);
-            }
+				inputSample.Seek(0, SeekOrigin.Begin);
+			}
 
-            for (uint i = 0; i < totalDataWritten; i += 2)
-            {
-                short value = reader.ReadInt16 ();
-                sbyte newValue = (sbyte)(value / 256);
-                writer.Write (newValue);
-            }
+			for (uint i = 0; i < totalDataWritten; i++)
+			{
+				short newValue = reader.ReadByte();
+				newValue -= 128;
+				writer.Write((sbyte)newValue);
+			}
 
             // sample length must be even, because its value is stored divided by 2
 			if (outputStream.Length % 2 != 0)
