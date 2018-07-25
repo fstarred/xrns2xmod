@@ -60,6 +60,9 @@
     <Compile Include="Resource.cs" />
     <Compile Include="UnitTestMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="..\SharedAssemblyInfo.cs">
+	  <Link>Properties\SharedAssemblyInfo.cs</Link>
+	</Compile>
     <Compile Include="UnitTestXM.cs" />
     <Compile Include="UnitTestBass.cs" />
   </ItemGroup>
