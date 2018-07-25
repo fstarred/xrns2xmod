@@ -164,7 +164,7 @@ namespace Xrns2XModUnitTest
 		[Test]
 		public void SincInterpolation ()
 		{
-			ConversionTest ("test_sample_sinc.xrns", "eaeebe5d4903b525bdfc6a4c6091858f");
+			ConversionTest ("test_sample_sinc.xrns", "607645657f1092842ceb58a31729395b");
 		}
 			
         [Test]
