@@ -42,7 +42,8 @@ namespace Xrns2XMod
                 if (iniExists == false)
                 {
                     configSource.AddConfig("volume");
-                    configSource.AddConfig("frequency");                
+                    configSource.AddConfig("frequency");
+					configSource.AddConfig("sinc");
                 }
                 configSource.AutoSave = true;
 
@@ -54,6 +55,16 @@ namespace Xrns2XMod
 
         #region Methods
 
+		public void SaveDefaultSincInterpolationPoints(int instrument, int sample, int value)
+		{
+			//if (Utility.IsWindowsOS())				
+			//    IniFile.IniWriteValue("volume", string.Format("{0}/{1}", instrument, sample), value.ToString(), IniPath);
+
+			IConfig configSection = configSource.Configs["sinc"];
+
+			configSection.Set(string.Format("{0}/{1}", instrument, sample), value.ToString());
+		}
+
         public void SaveDefaultVolumeSample(int instrument, int sample, int value)
         {
             //if (Utility.IsWindowsOS())				
@@ -64,43 +75,64 @@ namespace Xrns2XMod
             configSection.Set(string.Format("{0}/{1}", instrument, sample), value.ToString());
         }
 
-        public void SaveNewFreqSample(int instrument, int sample, int value)
+        public void SaveNewFreqSample(int instrument, int sample, string value)
         {
             //if (Utility.IsWindowsOS())
             //    IniFile.IniWriteValue("frequency", string.Format("{0}/{1}", instrument, sample), value.ToString(), IniPath);
 
             IConfig configSection = configSource.Configs["frequency"];
 
-            configSection.Set(string.Format("{0}/{1}", instrument, sample), value.ToString());
+            configSection.Set(string.Format("{0}/{1}", instrument, sample), value);
         }
 
         public int ReadDefaultVolumeSample(int instrument, int sample)
         {
-            string value = null;
+            const string defaultValue = "64";
+
+            string value;
 
             //if (Utility.IsWindowsOS())			
             //    value = IniFile.IniReadValue("volume", string.Format("{0}/{1}", instrument, sample), IniPath);
 
             IConfig configSection = configSource.Configs["volume"];
 
-            value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "64");
+            value = configSection?.Get(string.Format("{0}/{1}", instrument, sample), defaultValue) ?? defaultValue;
 
             return int.Parse(value);
         }
 
 
-        public int ReadFreqSample(int instrument, int sample)
+        public String ReadFreqSample(int instrument, int sample)
         {
-            string value = null;
+            const string defaultValue = "0";
+
+            string value;
             //if (Utility.IsWindowsOS())
             //    value = IniFile.IniReadValue("frequency", string.Format("{0}/{1}", instrument, sample), IniPath);
 
             IConfig configSection = configSource.Configs["frequency"];
 
-            value = configSection.Get(string.Format("{0}/{1}", instrument, sample), "0");
+            value = configSection?.Get(string.Format("{0}/{1}", instrument, sample), defaultValue) ?? defaultValue;
 
-            return int.Parse(value);
+			return value;
+
         }
+
+		public int ReadSincInterpolationPoints(int instrument, int sample)
+		{
+			//if (Utility.IsWindowsOS())
+            //    value = IniFile.IniReadValue("frequency", string.Format("{0}/{1}", instrument, sample), IniPath);
+
+            const string defaultValue = "2";
+
+            string value;
+
+            IConfig configSection = configSource.Configs["sinc"];
+
+            value = configSection?.Get(string.Format("{0}/{1}", instrument, sample), defaultValue) ?? defaultValue;
+
+			return int.Parse(value);
+		}
         
         #endregion
 

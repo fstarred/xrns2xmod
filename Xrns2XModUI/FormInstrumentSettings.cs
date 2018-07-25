@@ -26,7 +26,7 @@ namespace Xrns2XModUI
         private struct SampleInfo
         {
             public int Volume { get; set; }
-            public int SampleFreq { get; set; }
+            public String SampleFreq { get; set; }
             public int SampleFreqOriginal { get; set; }
         }
 
@@ -60,12 +60,11 @@ namespace Xrns2XModUI
                     {
                         int volume = iniWrapper.ReadDefaultVolumeSample(ci, si);
 
-                        int freq = iniWrapper.ReadFreqSample(ci, si);
+                        String freq = iniWrapper.ReadFreqSample(ci, si);
 
                         instrumentsInfo[ci].SampleInfo[si].Volume = volume;
 
-                        if (freq > 0)
-                            instrumentsInfo[ci].SampleInfo[si].SampleFreq = freq;
+                        instrumentsInfo[ci].SampleInfo[si].SampleFreq = freq;
                     }
                 }
             }
@@ -185,7 +184,7 @@ namespace Xrns2XModUI
                 {
                     instrumentsInfo[ci].SampleInfo[si].Volume = 64;
                     instrumentsInfo[ci].SampleInfo[si].SampleFreqOriginal = originalSampleFreq[ci][si];
-                    instrumentsInfo[ci].SampleInfo[si].SampleFreq = originalSampleFreq[ci][si];
+					instrumentsInfo[ci].SampleInfo[si].SampleFreq = originalSampleFreq[ci][si].ToString();
                 }
         }
 
@@ -247,11 +246,9 @@ namespace Xrns2XModUI
 
                 ValidateFrequency(cmbFrequency.Text);
 
-                int freq = Int32.Parse(cmbFrequency.Text);
-
                 instrumentsInfo[instrIndex].SampleInfo[sampleIndex].Volume = volume;
 
-                instrumentsInfo[instrIndex].SampleInfo[sampleIndex].SampleFreq = freq;
+				instrumentsInfo[instrIndex].SampleInfo[sampleIndex].SampleFreq = cmbFrequency.Text;
             }
             
         }
@@ -296,7 +293,7 @@ namespace Xrns2XModUI
                     if (sampleInfo.Volume < 64)
                         iniWrapper.SaveDefaultVolumeSample(ci, si, sampleInfo.Volume);
 
-                    if (sampleInfo.SampleFreq != sampleInfo.SampleFreqOriginal)
+					if (Int32.Parse(sampleInfo.SampleFreq) != sampleInfo.SampleFreqOriginal)
                         iniWrapper.SaveNewFreqSample(ci, si, sampleInfo.SampleFreq);
                 }
             }
@@ -322,7 +319,7 @@ namespace Xrns2XModUI
                 for (int si = 0; si < instrumentsInfo[ci].SampleInfo.Length; si++)
                 {
                     instrumentsInfo[ci].SampleInfo[si].Volume = 64;
-                    instrumentsInfo[ci].SampleInfo[si].SampleFreq = instrumentsInfo[ci].SampleInfo[si].SampleFreqOriginal;
+					instrumentsInfo[ci].SampleInfo[si].SampleFreq = instrumentsInfo[ci].SampleInfo[si].SampleFreqOriginal.ToString();
                 }
             }            
         }

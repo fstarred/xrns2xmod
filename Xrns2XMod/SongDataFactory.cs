@@ -245,6 +245,7 @@ namespace Xrns2XMod
                     {
                         songData.Instruments[ci].Samples[si].DefaultVolume = (byte)iniWrapper.ReadDefaultVolumeSample(ci, si);
                         songData.Instruments[ci].Samples[si].SampleFreq = iniWrapper.ReadFreqSample(ci, si);
+						songData.Instruments[ci].Samples[si].SincInterpolationPoints = (int)iniWrapper.ReadSincInterpolationPoints(ci, si);
                     }
                 }
             }
@@ -397,6 +398,7 @@ namespace Xrns2XMod
         private SampleData[] GetSamplesData(Sample[] renoiseSamples)
         {
             const int DefaultSampleVolume = 64;
+			const int DefaultSincInterpolationPoints = 2; //BASS uses this as default
 
             SampleData[] samples = new SampleData[renoiseSamples.Length];
 
@@ -412,6 +414,7 @@ namespace Xrns2XMod
                 samples[si].Transpose = renoiseSamples[si].Transpose;
                 samples[si].RelNoteNumber = (sbyte)renoiseSamples[si].Mapping.BaseNote;
                 samples[si].DefaultVolume = DefaultSampleVolume;
+				samples[si].SincInterpolationPoints = DefaultSincInterpolationPoints;
             }
 
 

@@ -16,12 +16,13 @@ namespace Xrns2XMod
 
         protected static string[] notesArray = { "C-", "C#", "D-", "D#", "E-", "F-", "F#", "G-", "G#", "A-", "A#", "B-" };
 
-        protected ModCommonBase(SongData songData, int paramTicksPerRow)
+        protected ModCommonBase(SongData songData, int paramTicksPerRow, bool ntscMode)
         {
             sampleOffsetCompatibilityMode = songData.SampleOffsetCompatibilityMode;
             pitchCompatibilityMode = songData.PitchCompatibilityMode;
             playbackEngineVersion = songData.PlaybackEngineVersion;
             ticksPerRow = paramTicksPerRow;
+            this.ntscMode = ntscMode;
         }
 
         protected static CultureInfo Culture = new CultureInfo("EN-GB");
@@ -30,6 +31,7 @@ namespace Xrns2XMod
         protected bool pitchCompatibilityMode { get; private set; }
         protected int ticksPerRow { get; private set; }
         protected int playbackEngineVersion { get; private set; }
+        protected bool ntscMode;
 
         protected static int CalculateSampleLength(int size, int bps, int chans)
         {
@@ -43,7 +45,7 @@ namespace Xrns2XMod
         }
 
 
-        protected static void GetSampleProperties(int renBaseNote, int transpose, int renFineTuning, int sampleRate, out int relativeTone, out int fineTune)
+        protected void GetSampleProperties(int renBaseNote, int transpose, int renFineTuning, int sampleRate, out int relativeTone, out int fineTune)
         {
             // range value in Renoise starts from 0 to 119
 
@@ -56,7 +58,12 @@ namespace Xrns2XMod
 
             int renoiseValue2Add = defaultNote - renBaseNote + transpose;
 
-            int f2t = (int)(1536.0 * (Math.Log((double)sampleRate / 8363.0) / Math.Log(2.0)));
+            const float NtscC2Frequency = 8363.42289719626f;
+            const float PalC2Frequency = 8287.13691588785f;
+
+            float C2Freq = ntscMode ? NtscC2Frequency : PalC2Frequency;
+
+			int f2t = (int)Math.Round(1536.0 * (Math.Log((double)sampleRate / C2Freq) / Math.Log(2.0)));
             int transp = f2t >> 7;
             int ftune = f2t & 0x7F; //0x7F == 111 1111 
 

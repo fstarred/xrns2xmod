@@ -15,6 +15,7 @@ namespace Xrns2XModCmd
         const int cursorLeftPosition = freeSpaceForMessaging + 2;
 
         static readonly string[] VOLUME_SCALING_AVAILABLE_MODE = new string[] { "N", "S", "C" };
+		static readonly string[] FORCE_PROTRACKER_COMPATIBILITY_AVAILABLE_MODE = new string[] { "N", "S", "H" };
 
         private static void PrintUsage(OptionSet p)
         {
@@ -37,7 +38,8 @@ namespace Xrns2XModCmd
             {
                 string destType = "xm";
                 //bool convfreq = false;
-                bool ptmode = true;
+                string ptmode = "H";
+                bool ptNtsc = false;
                 string volumeScalingMode = "S";
                 bool downgrade = false;
                 bool replaceZK = false;
@@ -56,8 +58,10 @@ namespace Xrns2XModCmd
                       v => destType = v },
                     //{ "convfreq", "convert all sample frequency to 8363 Hz (affects only mod)",
                     //  v => convfreq = v != null },
-                    { "ptmode=", "ProTracker compatibility (affects only mod)",
-                      v => ptmode = v == null || Boolean.Parse(v) == true },
+                    { "ptmode=", "ProTracker compatibility (affects only mod) (N(one)|S(oftware)|H(ardware)) (default: Hardware)",
+					  v => ptmode = v },
+                    { "ntsc=", "ProTracker Region (affects only mod) (default: false)",
+                      v => ptNtsc = v == null || Boolean.Parse(v) == true },
                     { "volscal|volumescaling=", "volume scaling mode (N(one)|S(ample)|C(olumn))",
                       v => volumeScalingMode = v },
                     { "tempo=" , "the initial tempo value (affects only xm)", v => tempo = int.Parse(v) },
@@ -299,7 +303,12 @@ namespace Xrns2XModCmd
 
                     //MainFactory.InitResources(IntPtr.Zero, bassEmail, bassCode);
 
-                    Console.CursorTop++;
+                    /*
+                    ** Slamy: Moving the cursor like this causes problems on Mono.
+                    ** It says 'fixing "Value must be positive and below the buffer height."'
+                    ** But it doesn't seems to be necessary anyway? I'll comment it out.
+                    */
+                    //Console.CursorTop++;
 
                     Console.WriteLine("Reading xrns data...");
 
@@ -320,14 +329,7 @@ namespace Xrns2XModCmd
                     Console.Write(Environment.NewLine);
 
                     Console.WriteLine("File is ok, now it's time to convert.");
-
                     Console.WriteLine("{0} conversion has started... please wait ", destType);
-
-                    Thread t = new Thread(new ThreadStart(ThreadProc));
-
-                    t.IsBackground = true;
-
-                    t.Start();
 
                     DateTime dtStart = DateTime.Now;
 
@@ -356,9 +358,12 @@ namespace Xrns2XModCmd
                         ModSettings settings = new ModSettings();
 
                         //settings.MantainOriginalSampleFreq = !convfreq;
-                        settings.ForceProTrackerCompatibility = ptmode;
+						settings.ForceProTrackerCompatibility = GetProtrackerCompatibilityMode(ptmode);
+                        settings.NtscMode = ptNtsc;
                         settings.VolumeScalingMode = GetVolumeScalingMode(volumeScalingMode);
                         settings.PortamentoLossThreshold = portamentoLossThreshold;
+
+						settings.printSettings();
 
                         if (portamentoLossThreshold < 0 || portamentoLossThreshold > 4)
                             throw new ApplicationException("invalid portamento loss threshold value (valid range: 0-4)");
@@ -442,6 +447,35 @@ namespace Xrns2XModCmd
             return mode;
         }
 
+		static PROTRACKER_COMPATIBILITY_MODE GetProtrackerCompatibilityMode(string input)
+		{
+			PROTRACKER_COMPATIBILITY_MODE mode = PROTRACKER_COMPATIBILITY_MODE.A3MAX;
+
+			input = input.ToUpper();
+
+			if (FORCE_PROTRACKER_COMPATIBILITY_AVAILABLE_MODE.Contains(input))
+			{
+
+				switch (input.ToCharArray()[0])
+				{
+				case 'N':
+					mode = PROTRACKER_COMPATIBILITY_MODE.NONE;
+					break;
+				case 'S':
+					mode = PROTRACKER_COMPATIBILITY_MODE.B3MAX;
+					break;
+				case 'H':
+					mode = PROTRACKER_COMPATIBILITY_MODE.A3MAX;
+					break;
+				}
+			}
+			else
+				throw new ApplicationException("Invalid ProTracker Compatibiltiy mode specified");
+
+			return mode;
+		}
+
+
         static void ReportProgress(object sender, EventReportProgressArgs e)
         {
             Console.CursorLeft = 0;
@@ -456,22 +490,6 @@ namespace Xrns2XModCmd
 
         }
 
-
-        public static void ThreadProc()
-        {
-            char[] loopCharSeq = { '\\', '|', '/', '-' };
-            int curChar = 0;
-
-            while (true)
-            {
-                Console.CursorLeft = cursorLeftPosition;
-                Console.Write(loopCharSeq[curChar++ % 4]);
-                Thread.Sleep(500);
-            }
-        }
-
-
     }
-
 
 }

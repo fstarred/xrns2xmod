@@ -23,11 +23,12 @@ namespace Xrns2XMod
 
         ChannelInfoData[] channelData = new ChannelInfoData[4];
 
-        bool forceProtrackerCompatibility;
+		PROTRACKER_COMPATIBILITY_MODE forceProtrackerCompatibility;
+
         int portamentoAccuracyThreshold;
 
-        public ModUtils(SongData songData, int paramTicksPerRow, bool forceProTrackerCompatibility, int portamentoAccuracyThreshold)
-            : base(songData, paramTicksPerRow)
+		public ModUtils(SongData songData, int paramTicksPerRow, PROTRACKER_COMPATIBILITY_MODE forceProTrackerCompatibility, int portamentoAccuracyThreshold, bool ntscMode)
+            : base(songData, paramTicksPerRow, ntscMode)
         {
             modCommands = new ModCommands(songData, paramTicksPerRow);
 
@@ -52,14 +53,14 @@ namespace Xrns2XMod
             }
 
         }
-
+            
         public ModUtils(SongData songData, int paramTicksPerRow)
-            : this(songData, paramTicksPerRow, false, 2)
+			: this(songData, paramTicksPerRow, PROTRACKER_COMPATIBILITY_MODE.NONE, 2, true) //NTSC shall be default for this constructor so XM mode doesn't get changed
         {
             
         }
         
-        private static readonly int[] PeriodsRange = 
+        public static readonly int[] PeriodsRange = 
         { 
             1712,1616,1524,1440,1356,1280,1208,1140,1076,1016,960,907,                
 	        856,808,762,720,678,640,604,570,538,508,480,453, // standard pro tracker tunes (Amiga freq.)
@@ -68,6 +69,13 @@ namespace Xrns2XMod
 	        107,101,95,90,85,80,75,71,67,63,60,56,
 	        53,50,47,45,42,40,37,35,33,31,30,28 
         };
+
+		public const int NOTE_VALUE_C1 = 12;
+		public const int NOTE_VALUE_C2 = 24;
+		public const int NOTE_VALUE_C3 = 36;
+		public const int NOTE_VALUE_A3 = 45;
+		public const int NOTE_VALUE_B3 = 47;
+		public const int NOTE_VALUE_C4 = 48;
 
         protected InstrumentDataMOD[] instrumentsList;
 
@@ -118,14 +126,19 @@ namespace Xrns2XMod
 
                 int finalNote = (octave - 2) * 12 + noteIndex + tone2Add;
 
-                if (finalNote >= 0 && finalNote < PeriodsRange.Length
-                    && (forceProtrackerCompatibility == false || finalNote > 11 && finalNote < 48))
-                {
+				/*
+				 * In case forceProtrackerCompatibility is active previously B-3 was the highest
+				 * accepted note value as this is the maximum one a real ProTracker can keep track off.
+				 * But B-3 is not safe on a real Amiga hardware (tested on A1200) as the DMA cannot keep up and sound distortion will occur.
+				 * This is why multiple levels of ProTracker compatibility are now supported.
+				 */
+				if (isNoteInRange(finalNote))
+				{
                     value = finalNote;
                 }
                 else
                 {
-                    throw new ConversionException(String.Format("note {0} is out of range", note));
+					throw new ConversionException(String.Format("note {0} is out of range (can be fixed by changing sample frequency)", note));
                 }
             }
 
@@ -166,6 +179,61 @@ namespace Xrns2XMod
             return output;            
         }
 
+		public bool isNoteInPeriodRange(int noteIndex)
+		{
+			bool inRange = (noteIndex >= 0 && noteIndex < PeriodsRange.Length);
+
+			return inRange;
+		}
+
+		public bool isNoteInRange(int noteIndex)
+		{
+			bool inRange = (noteIndex >= 0 && noteIndex < PeriodsRange.Length);
+
+			if (forceProtrackerCompatibility != PROTRACKER_COMPATIBILITY_MODE.NONE && noteIndex < NOTE_VALUE_C1)
+				inRange = false;
+			if (forceProtrackerCompatibility == PROTRACKER_COMPATIBILITY_MODE.A3MAX && noteIndex > NOTE_VALUE_A3)
+				inRange = false;
+			if (forceProtrackerCompatibility == PROTRACKER_COMPATIBILITY_MODE.B3MAX && noteIndex > NOTE_VALUE_B3)
+				inRange = false;
+
+			return inRange;
+		}
+
+		public int GetModNote(string note)
+		{
+			int value = 0;
+
+			string tune = note.Substring(0, 2);
+
+			// useful for finding an item into an array
+			int originalNoteIndex = Array.FindIndex(notesArray, delegate(string item)
+				{
+					return item.Equals(tune);
+				});
+			if (originalNoteIndex >= 0)
+			{
+				int octave = Int16.Parse(note.Substring(2, 1));
+
+				int noteIndex = (octave) * 12 + originalNoteIndex;
+
+				if (isNoteInPeriodRange(noteIndex))
+				{
+					value = PeriodsRange[noteIndex];
+
+					// debug
+					//Console.WriteLine(String.Format("Note:  Period: {0} ModNote: {1}  String: {2}", value, noteIndex, note));
+				}
+				else
+				{
+					throw new ConversionException(String.Format("note {0} is out of range (can be fixed by changing sample frequency)", note));
+				}
+			}
+
+			return value;
+		}
+
+
         public int GetModNote(string note, int sampleNumber, int channel, bool isTonePortamentoTriggered)
         {
             //due to lack of base note sample on mod, 
@@ -187,9 +255,8 @@ namespace Xrns2XMod
 
                 int noteIndex = (octave - 2) * 12 + originalNoteIndex + tone2Add;
 
-                if (noteIndex >= 0 && noteIndex < PeriodsRange.Length
-                    && (forceProtrackerCompatibility == false || noteIndex > 11 && noteIndex < 48))
-                {
+				if (isNoteInRange(noteIndex))
+				{
                     value = PeriodsRange[noteIndex];
 
                     int renoiseNote = (octave * 12) + originalNoteIndex;
@@ -219,7 +286,7 @@ namespace Xrns2XMod
                 }
                 else
                 {
-                    throw new ConversionException(String.Format("note {0} is out of range", note));
+					throw new ConversionException(String.Format("note {0} is out of range (can be fixed by changing sample frequency)", note));
                 }
             }
 
