@@ -76,6 +76,9 @@
     <None Include="ini\test_default_volume.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="ini\test_sample_sinc.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
