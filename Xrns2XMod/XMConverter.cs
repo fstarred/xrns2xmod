@@ -95,11 +95,13 @@ namespace Xrns2XMod
 
             byte[] headerStream = new byte[xmHeaderSize];
 
-            string progName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-            string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //string progName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+            // string version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            const string progName = "Xrns2XMod";
 
             const string idText = "Extended Module: ";
-            string trackerName = progName + " " + version;
+            string trackerName = progName; // + version
 
             trackerName = trackerName.Length > 20 ? trackerName.Substring(0, 20) : trackerName;
 
