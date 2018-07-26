@@ -11,8 +11,14 @@ namespace Xrns2XMod
 {
     public static class BassWrapper
     {
+		private static bool isInitialized = false;
+
         public static void InitResources(IntPtr win, string bassEmail, string bassCode)
         {
+			//This function shall only be executed once! At least NUnit has a problem if executed multiple times.
+			if (isInitialized)
+				return;
+			
             string targetPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             //if (Utils.Is64Bit)
@@ -27,16 +33,24 @@ namespace Xrns2XMod
 
             if (Utility.IsWindowsOS())
             {
+#if __MonoCS__
+				//mono specific code for linux. LoadMe is not available and not needed.
+#else 
+				//for Windows
                 Bass.LoadMe();
                 BassMix.LoadMe();
                 BassFlac.LoadMe();
                 BassAac.LoadMe();
+#endif
+                
             }
 
             bool isBassInit = Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, win);
 
             if (!isBassInit)
                 throw new ApplicationException("Some errors occurred while initializing audio dll");
+
+			isInitialized = true;
 
         }
 
@@ -50,8 +64,8 @@ namespace Xrns2XMod
             int handle;
 
             Stream stream = input.Stream;
-
-            stream.Seek(0, System.IO.SeekOrigin.Begin);
+				
+            stream.Seek (0, System.IO.SeekOrigin.Begin);
 
             byte[] buffer = Utility.GetBytesFromStream(stream, stream.Length);
 
@@ -148,7 +162,7 @@ namespace Xrns2XMod
             Bass.BASS_StreamFree(handle);
         }
 
-        public static Stream GetModEncodedSample(int handle, long sampleLength, bool ptCompatibility)
+		public static Stream GetModEncodedSample(int handle, long sampleLength, PROTRACKER_COMPATIBILITY_MODE ptCompatibility)
         {
             byte[] buffer = new byte[sampleLength];
 
@@ -163,34 +177,31 @@ namespace Xrns2XMod
 
             BinaryWriter writer = new BinaryWriter(outputStream);
 
-            int delta = 0;
-
-            byte oldValue = (byte)128;
+			// BASS gives us unsigned 8 bit sample data. we need signed one!
 
             // Amiga ProTracker compatibility
             // all samples with no loop should begin with two bytes of 0 value (Thanks to Jojo of OpenMPT for the hints)            
-            if (ptCompatibility)
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    byte value = reader.ReadByte();
-                    if (value != 128)
-                        writer.Write((sbyte)0);
-                }
+			if (ptCompatibility != PROTRACKER_COMPATIBILITY_MODE.NONE)
+			{
+				for (int i = 0; i < 2; i++)
+				{
+					byte value = reader.ReadByte();
+					if (value != 128)
+						writer.Write(0);
+				}
 
-                inputSample.Seek(0, SeekOrigin.Begin);
-            }
+				inputSample.Seek(0, SeekOrigin.Begin);
+			}
 
-            for (uint i = 0; i < totalDataWritten; i++)
-            {
-                byte newValue = reader.ReadByte();
-                delta += (newValue - oldValue);
-                oldValue = newValue;
-                writer.Write((sbyte)delta);
-            }
+			for (uint i = 0; i < totalDataWritten; i++)
+			{
+				short newValue = reader.ReadByte();
+				newValue -= 128;
+				writer.Write((sbyte)newValue);
+			}
 
             // sample length must be even, because its value is stored divided by 2
-            if (totalDataWritten % 2 != 0)
+			if (outputStream.Length % 2 != 0)
             {
                 writer.Write((sbyte)0);
             }
@@ -223,15 +234,20 @@ namespace Xrns2XMod
 
             // add channel to mixer
             bool isMixerGood = BassMix.BASS_Mixer_StreamAddChannel(mixer, handle, BASSFlag.BASS_MIXER_NORAMPIN);
-
             return mixer;
         }        
 
         public static void FreeResources()
         {
-            Bass.FreeMe();
-            BassMix.FreeMe();
-            BassFlac.FreeMe();
+#if __MonoCS__
+			//mono specific code for linux. FreeMe is not available and not needed.
+#else 
+			//for Windows
+			Bass.FreeMe();
+			BassMix.FreeMe();
+			BassFlac.FreeMe();
+#endif
+
 
         }
     }

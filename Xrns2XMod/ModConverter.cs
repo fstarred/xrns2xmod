@@ -57,10 +57,11 @@ namespace Xrns2XMod
 
             int ticksPerRow = initialTickPerRow;
 
-            bool forceProTrackerCompatibility = Settings.ForceProTrackerCompatibility;
+			PROTRACKER_COMPATIBILITY_MODE forceProTrackerCompatibility = Settings.ForceProTrackerCompatibility;
             int portamentoAccuracyLossThreshold = Settings.PortamentoLossThreshold;
+            bool NtscMode = Settings.NtscMode;
 
-            modUtils = new ModUtils(songData, ticksPerRow, forceProTrackerCompatibility, portamentoAccuracyLossThreshold);
+            modUtils = new ModUtils(songData, ticksPerRow, forceProTrackerCompatibility, portamentoAccuracyLossThreshold, NtscMode);
         }
 
         const int maxInstruments = 31;
@@ -144,7 +145,22 @@ namespace Xrns2XMod
         {
             const int sampleInfoSize = 930;
 
-            const int freqC3 = 8363;
+            /*
+             * Informations about frequency is based on http://www.pouet.net/topic.php?which=8628
+             * For a PAL machine:
+             * SampleRate = 7093789.2 / (Period * 2)
+             * C2 428 -> 8287.13691 Hz
+             * C3 214 -> 16574.2738 Hz
+             * For a NTSC machine:
+             * SampleRate = 7159090 / (Period * 2)
+             * C2 428 -> 8363.423 Hz
+             * C3 214 -> 16726.846 Hz
+             */
+
+			const float PalFreq = 7093789.2f;
+			const float NtscFreq = 7159090.0f;
+			float SysFreq = Settings.NtscMode ? NtscFreq : PalFreq;
+			int noteIndexMax = (Settings.ForceProTrackerCompatibility == PROTRACKER_COMPATIBILITY_MODE.A3MAX) ? ModUtils.NOTE_VALUE_A3 : ModUtils.NOTE_VALUE_B3;
 
             const int maxSampleLengthMOD = 65536;
 
@@ -174,7 +190,7 @@ namespace Xrns2XMod
 
             for (int ci = 0; ci < totalInstruments; ci++)
             {
-                OnReportProgress(new EventReportProgressArgs(String.Format("Processing Sample {0}/{1}", (ci + 1), totalInstruments)));
+				OnReportProgress(new EventReportProgressArgs(String.Format("Processing Sample {0}/{1} - {2}", (ci + 1), totalInstruments, instruments[ci].Name)));
 
                 if (instruments[ci].Samples.Length > 1)
                 {
@@ -208,22 +224,82 @@ namespace Xrns2XMod
 
                         // samplerate may be:
                         // 1) same as original
-                        // 2) taken from song settings                        
-                        int sampleRate = freqC3;
+                        // 2) taken from song settings
+                        int sampleRate;
                         
-                        int freqFromIni = instruments[ci].Samples[0].SampleFreq;
+                        string freqFromIniStr = instruments[ci].Samples[0].SampleFreq;
+
+						int freqFromIni=0;
+						int noteIndex=0;
+						int period=0;
+
+						if (freqFromIniStr == null) //the default case is C2 if no settings are provided
+							noteIndex = ModUtils.NOTE_VALUE_C2;
+						else if (freqFromIniStr.Equals("Low"))
+							noteIndex = ModUtils.NOTE_VALUE_C2;
+						else if (freqFromIniStr.Equals ("High"))
+							noteIndex = ModUtils.NOTE_VALUE_C3;
+						else if (freqFromIniStr.Equals ("Maximum") || freqFromIniStr.Equals("Max"))
+							noteIndex = noteIndexMax;
+						else if (freqFromIniStr.Equals ("Original"))
+							freqFromIni = bassChannelInfo.freq;
+						else
+						{
+							if (freqFromIniStr.Length == 3)
+							{
+								period = modUtils.GetModNote(freqFromIniStr);
+
+							}
+							else
+								freqFromIni = int.Parse(freqFromIniStr);
+						}
+
 
                         if (freqFromIni > 0)
                         {
-                            OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency adjusted to: {1} Hz", (ci + 1), freqFromIni), MsgType.INFO));
-                            sampleRate = freqFromIni;
+							sampleRate = freqFromIni;
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency manually adjusted to: {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
                         }
+						else if (noteIndex > 0)
+						{
+							sampleRate = (int)Math.Round(SysFreq / (ModUtils.PeriodsRange[noteIndex] * 2));
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency manually adjusted from {2} to: {1} Hz", (ci + 1), sampleRate, freqFromIniStr), MsgType.INFO));
+						}
+						else if (period > 0)
+						{
+							sampleRate = (int)Math.Round(SysFreq / ((float)period * 2.0f));
+							OnReportProgress(new EventReportProgressArgs(String.Format("Sample {0} frequency manually adjusted from note value {2} to: {1} Hz", (ci + 1), sampleRate, freqFromIniStr), MsgType.INFO));
+						}
                         else
-                            sampleRate = bassChannelInfo.freq;
-                        
+                        {
+							noteIndex = ModUtils.NOTE_VALUE_C2;
+							sampleRate = (int)Math.Round(SysFreq / (ModUtils.PeriodsRange[noteIndex] * 2));
+							OnReportProgress (new EventReportProgressArgs (String.Format ("Sample {0} frequency defaults to C2 frequency {1} Hz", (ci + 1), sampleRate), MsgType.INFO));
+                            
+                        }
 
-                        int mixer = BassWrapper.PlugChannelToMixer(handle, sampleRate, 1, 8);
+						float ret=0;
+						Bass.BASS_ChannelGetAttribute(handle,BASSAttribute.BASS_ATTRIB_SRC,ref ret);
+						//Console.WriteLine("BASS_ATTRIB_SRC " + ret);
 
+						int sincPoints = instruments[ci].Samples[0].SincInterpolationPoints;
+
+						if ((int)ret != sincPoints)
+						{
+							OnReportProgress(new EventReportProgressArgs(String.Format("Altering number of Sinc Interpolation Points to {0}", sincPoints)));
+							Bass.BASS_ChannelSetAttribute(handle,BASSAttribute.BASS_ATTRIB_SRC, (float)sincPoints);
+
+							Bass.BASS_ChannelGetAttribute(handle,BASSAttribute.BASS_ATTRIB_SRC,ref ret);
+							//Console.WriteLine("BASS_ATTRIB_SRC_NEW " + ret);
+
+							if ((int)ret != sincPoints)
+							{
+								throw new ApplicationException("Failed to set number of Sinc Interpolation Points");
+							}
+						}
+							
+                        int mixer = BassWrapper.PlugChannelToMixer (handle, sampleRate, 1, 8);
+						
                         if (Settings.VolumeScalingMode == VOLUME_SCALING_MODE.SAMPLE && instruments[ci].Samples[0].Volume != 1.0f)
                         {
                             OnReportProgress(new EventReportProgressArgs(String.Format("Ramping sample volume to value {0}", instruments[ci].Samples[0].Volume)));
@@ -245,7 +321,7 @@ namespace Xrns2XMod
 
                         if (stream.Length > maxSampleLengthMOD)
                         {
-                            throw new ApplicationException(String.Format("Sample number {0} is too large: max size for mod is {1}", (ci + 1), maxSampleLengthMOD));
+							throw new ApplicationException(String.Format("Sample number {0} is too large: max size for mod is {1}. Current length is {2}", (ci + 1), maxSampleLengthMOD, stream.Length));
                         }
 
                         // sample data will be stored only if sample doesn't exceed length of 65536 bytes

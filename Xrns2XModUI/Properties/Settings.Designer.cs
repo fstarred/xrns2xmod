@@ -122,9 +122,9 @@ namespace Xrns2XModUI.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PTCompatibiliy {
+		public global::Xrns2XMod.PROTRACKER_COMPATIBILITY_MODE PTCompatibiliy {
             get {
-                return ((bool)(this["PTCompatibiliy"]));
+				return ((global::Xrns2XMod.PROTRACKER_COMPATIBILITY_MODE)(this["PTCompatibiliy"]));
             }
             set {
                 this["PTCompatibiliy"] = value;

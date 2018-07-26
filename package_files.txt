@@ -1,0 +1,11 @@
+bass.dll
+bassmix.dll
+bassflac.dll
+Bass.Net.dll
+ICSharpCode.SharpZipLib.dll
+Nini.dll
+Xrns2XMod.dll
+Xrns2XModShell.exe
+Xrns2XModShell.exe.config
+resources
+ini

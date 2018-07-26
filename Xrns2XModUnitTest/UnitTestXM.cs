@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -6,7 +6,7 @@ using Xrns2XMod;
 
 namespace Xrns2XModUnitTest
 {
-    [TestClass]
+    [TestFixture]
     public class UnitTestXM
     {
         SongDataFactory songDataFactory;
@@ -16,241 +16,171 @@ namespace Xrns2XModUnitTest
 
         public TestContext TestContext { get; set; }
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext ctx)
+        [TestFixtureSetUp]
+        public static void ClassInitialize ()
         {
-            ctx.WriteLine("Initializing XM Unit Test class");
-            BassWrapper.InitResources(IntPtr.Zero, null, null);
+            Console.WriteLine ("Initializing XM Unit Test class");
+            BassWrapper.InitResources (IntPtr.Zero, null, null);
         }
 
-        [ClassCleanup()]
-        public static void ClassCleanup()
+        [TestFixtureTearDown]
+        public static void ClassCleanup ()
         {
-            BassWrapper.FreeResources();
+            Console.WriteLine ("Free XM Unit Test class");
+            BassWrapper.FreeResources ();
         }
 
-        [TestInitialize]
-        public void InitializeMethod()
+
+        public void ConversionTest (string path, string hash)
         {
-            songDataFactory = new SongDataFactory();            
+            songDataFactory = new SongDataFactory ();            
+			songDataFactory.ReportProgress += ReportProgress;
 
-            string theClassName = TestContext.FullyQualifiedTestClassName;
-            string testName = TestContext.TestName;
+            string input = "resources/examples/" + path;
+            
+            RenoiseSong renoiseSong = songDataFactory.ExtractRenoiseSong (input);
+            songData = songDataFactory.ExtractSongData (renoiseSong, input);
+            converter = new XMConverter (input);
 
-            // NOTE: You might have to use AppDomain.CurrentDomain.GetAssemblies() 
-            // and then call GetTypes on each assembly if this code
-            // resides in a baseclass in another assembly. 
-            var currentlyRunningClassType = this.GetType()
-                .Assembly
-                .GetTypes()
-                .FirstOrDefault(f => f.FullName == theClassName);
-
-            var currentlyRunningMethod = currentlyRunningClassType.GetMethod(testName);
-
-            var resourceAttribute = currentlyRunningMethod.
-                GetCustomAttributes<Resource>()
-                .FirstOrDefault();
-
-            string input = this.TestContext.Properties["resource_path"].ToString() + resourceAttribute.Path;
-            RenoiseSong renoiseSong = songDataFactory.ExtractRenoiseSong(input);
-            songData = songDataFactory.ExtractSongData(renoiseSong, input);
-            converter = new XMConverter(input);
-
-            settings = new XmSettings();
+            settings = new XmSettings ();
             settings.Tempo = songData.InitialBPM;
             settings.TicksRow = songData.TicksPerLine;
             converter.Settings = settings;
+
+            converter.EventProgress += ReportProgress;
+
+            byte[] bytes = converter.Convert (songData);
+
+            string hashGen = MD5Utils.GenerateMd5Hash (bytes);
+
+            //Write file for later investigation
+            string outputFile = input.Remove (input.Length - 5); // default output file, same as input without .xrns extension
+
+            outputFile = System.Text.RegularExpressions.Regex.Match (outputFile, @"(?:(?!\.(mod|xm)$).)*").Value;
+
+            string outputFileExt = System.Text.RegularExpressions.Regex.Match (outputFile, @"\.(mod | xm)$").Value;
+            string destType = "xm";
+
+            // add extension to output file in case user has not already specified it
+            if (!outputFileExt.Equals ("." + destType, StringComparison.CurrentCultureIgnoreCase)) {
+                outputFile += '.' + destType;
+            }
+
+            Utility.SaveByteArrayToFile (outputFile, bytes);
+
+            //So is it what we wanted?
+            Assert.AreEqual (hash, hashGen);
+
         }
 
-        [Resource("test_adjust_sample_frequency.xrns")]
-        [TestMethod]
-        public void AdjustSampleFrequency()
+        static void ReportProgress (object sender, EventReportProgressArgs e)
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("52e02bc86985f0f83435aca9ee62efe5", output);
+            Console.WriteLine (e.message);
         }
 
-        [Resource("test_default_volume.xrns")]
-        [TestMethod]
-        public void DefaultVolume()
+        [Test]
+        public void AdjustSampleFrequency ()
         {
-            byte[] bytes = converter.Convert(songData);
+			ConversionTest ("test_adjust_sample_frequency.xrns", "5bb4d0e1f0f8e78b573e0d8625c85259");
+		}
 
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("6774ec1c292beece37a04fc17ac2e45a", output);
-        }
-
-        [Resource("test_delay_column.xrns")]
-        [TestMethod]
-        public void DelayColumn()
+        [Test]
+        public void DefaultVolume ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("f67a94b3a54bae37d663c05ff4502001", output);
+			ConversionTest ("test_default_volume.xrns", "88f236fcadec11ca1b50c4fd31e49c86");
         }
 
-        [Resource("test_fade_volume_compatibility_trick.xrns")]
-        [TestMethod]
-        public void FadeVolumeCompatibilityTrick()
+        [Test]
+        public void DelayColumn ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("0c79bbb58ff4a8e9e1a4c958c6dacd27", output);
+			ConversionTest ("test_delay_column.xrns", "60dd6b5506a556047bbb07231504fbe6");
         }
 
-
-        [Resource("test_ft2_mode.xrns")]
-        [TestMethod]
-        public void FT2Mode()
+        [Test]
+        public void FadeVolumeCompatibilityTrick ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("1a8ecc9dee9a3678ee4224cc9c346430", output);
+			ConversionTest ("test_fade_volume_compatibility_trick.xrns", "7332c804c21fd696eb86a9fcbb23ecff");
         }
 
-
-        [Resource("test_global_commands.xrns")]
-        [TestMethod]
-        public void GlobalCommands()
+        [Test]
+		public void FT2Mode ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("fc1c3b52e9d722901670049401320e93", output);
+			ConversionTest ("test_ft2_mode.xrns", "1d5625dd578504b2c949f391add67c5a");
         }
 
-        [Resource("test_global_volume_xm_commands.xrns")]
-        [TestMethod]
-        public void GlobalVolumeXmCommands()
+        [Test]
+		public void GlobalCommands ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("ae1df1b1cf5a16a7d35cc20624d7fe51", output);
+			ConversionTest ("test_global_commands.xrns", "1a7e740900e80a53393799668e4ecce4");
         }
 
-        [Resource("test_instrument_envelopes.xrns")]
-        [TestMethod]
-        public void InstrumentEnvelopes()
+        [Test]
+        public void GlobalVolumeXmCommands ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("7c741e1f44514bc4a94b90bc0849d54e", output);
+			ConversionTest ("test_global_volume_xm_commands.xrns", "952366929aef04dcdf4dee27dedc9f24");
         }
 
-        [Resource("test_instrument_keymap.xrns")]
-        [TestMethod]
-        public void InstrumentKeymap()
+        [Test]
+        public void InstrumentEnvelopes ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("5e746efcc1493974a218b1ede021dde7", output);
+			ConversionTest ("test_instrument_envelopes.xrns", "9611b90736a11ae2d9cf6849bdffd6ae");
         }
 
-        [Resource("test_instruments_commands.xrns")]
-        [TestMethod]
-        public void InstrumentsCommands()
+        [Test]
+        public void InstrumentKeymap ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("3c450c54fa62f6e7a00a6587203c2988", output);
+			ConversionTest ("test_instrument_keymap.xrns", "90b5bf094698f34a0b1e73defda20ded");
         }
 
-        [Resource("test_multi_columns.xrns")]
-        [TestMethod]
-        public void MultiColumns()
+        [Test]
+        public void InstrumentsCommands ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("aacd817279de9c55add5f4a5f05736cf", output);
+			ConversionTest ("test_instruments_commands.xrns", "d1ce14d20853eb8ca62aa5da5c7f965b");
         }
 
-        [Resource("test_panning_column.xrns")]
-        [TestMethod]
-        public void PanningColumn()
+        [Test]
+        public void MultiColumns ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("4107eed8586d6b0395fa03570ead5a74", output);
+			ConversionTest ("test_multi_columns.xrns", "886d8aee962f6e42e6a727cc78b6f2c4");
         }
 
-        [Resource("test_renoise_standard_tpl_mode.xrns")]
-        [TestMethod]
-        public void RenoiseStandardTPLMode()
+        [Test]
+        public void PanningColumn ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("a9cf4bb798ba9d472021a8a8bca598ae", output);
+			ConversionTest ("test_panning_column.xrns", "e40767b74223c625d8e003505f9d31e3");
         }
 
-        [Resource("test_sample_commands.xrns")]
-        [TestMethod]
-        public void SampleCommands()
+        [Test]
+        public void RenoiseStandardTPLMode ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("0d559b8c089e83e3788e4d95d5d877fd", output);
+			ConversionTest ("test_renoise_standard_tpl_mode.xrns", "92abe7b7b8e2386b9fa09e7d0fb7b3a8");
         }
 
-        [Resource("test_tick_commands.xrns")]
-        [TestMethod]
-        public void TickCommands()
+        [Test]
+        public void SampleCommands ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("513cab45a102ac003cd754a54c8ef14a", output);
+			ConversionTest ("test_sample_commands.xrns", "eb5808f2e424fe535474c9d2ac260417");
         }
 
-        [Resource("test_volume_column.xrns")]
-        [TestMethod]
-        public void VolumeColumn()
+        [Test]
+        public void TickCommands ()
         {
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("c89468b202520aa6dfec2224cfdffedc", output);
+			ConversionTest ("test_tick_commands.xrns", "d11a166a291580271d88e7c7a99a7830");
         }
 
-        [Resource("test_volume_scaling_mode.xrns")]
-        [TestMethod]
-        public void VolumeScalingMode()
+
+        [Test]
+        public void VolumeColumn ()
         {
-            converter.Settings.VolumeScalingMode = VOLUME_SCALING_MODE.COLUMN;
-
-            byte[] bytes = converter.Convert(songData);
-
-            string output = MD5Utils.GenerateMd5Hash(bytes);
-
-            Assert.AreEqual("04f4ae7c82e87c5382c28fc1ef438600", output);            
+			ConversionTest ("test_volume_column.xrns", "85e2f2fec2fb93901ee182e15c86dc00");
         }
+
+        [Test]
+        public void VolumeScalingMode ()
+        {
+			ConversionTest ("test_volume_scaling_mode.xrns", "667d32d0b13c6d3ebe3fe0308215f8d4");
+        }
+
+
     }
 }

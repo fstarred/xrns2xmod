@@ -1,20 +1,20 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
+
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Xrns2XModUnitTest")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Xrns2XModUnitTest")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
-[assembly: AssemblyTrademark("")]
+
+// Note: Shared assembly information is specified in SharedAssemblyInfo.cs
+
+// General Information about an assembly is controlled through the following
+
+// set of attributes. Change these attribute values to modify the information
+
+// associated with an assembly.
+
+[assembly: AssemblyTitle("Xrns2XMod Unit Test")]
+
 [assembly: AssemblyCulture("")]
 
-[assembly: ComVisible(false)]
+// The following GUID is for the ID of the typelib if this project is exposed to COM
 
 [assembly: Guid("cfa97c88-bb30-4442-85af-58e5291d86fe")]
-
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
