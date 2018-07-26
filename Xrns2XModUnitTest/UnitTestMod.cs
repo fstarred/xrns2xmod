@@ -164,9 +164,9 @@ namespace Xrns2XModUnitTest
 		[Test]
 		public void SincInterpolation ()
 		{
-			ConversionTest ("test_sample_sinc.xrns", "eaeebe5d4903b525bdfc6a4c6091858f");
+			ConversionTest ("test_sample_sinc.xrns", "81588b43d108476e93e8714b4afc5b06");
 		}
-			
+
         [Test]
         public void TickCommands ()
         {

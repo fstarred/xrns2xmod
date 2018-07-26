@@ -1,3 +1,5 @@
+rem Run this batch from Developer Command Prompt for VS 2xxx
+
 @echo off
 set output_test_path=D:\SMS_Software\xrns2xmod\test
 set nunit_console_exe=.\packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe

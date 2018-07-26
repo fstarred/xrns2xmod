@@ -81,104 +81,104 @@ namespace Xrns2XModUnitTest
         [Test]
         public void AdjustSampleFrequency ()
         {
-			ConversionTest ("test_adjust_sample_frequency.xrns", "98ffd26ebce463439a0e544a020289d4");
+			ConversionTest ("test_adjust_sample_frequency.xrns", "5bb4d0e1f0f8e78b573e0d8625c85259");
 		}
 
         [Test]
         public void DefaultVolume ()
         {
-			ConversionTest ("test_default_volume.xrns", "8c2e69e9c96d0b6df4ece91306b43304");
+			ConversionTest ("test_default_volume.xrns", "88f236fcadec11ca1b50c4fd31e49c86");
         }
 
         [Test]
         public void DelayColumn ()
         {
-			ConversionTest ("test_delay_column.xrns", "ac5c9f2d6ac31564ccfe3c12274875e2");
+			ConversionTest ("test_delay_column.xrns", "60dd6b5506a556047bbb07231504fbe6");
         }
 
         [Test]
         public void FadeVolumeCompatibilityTrick ()
         {
-			ConversionTest ("test_fade_volume_compatibility_trick.xrns", "ce0d0185fcf148ffe80d5fd615ab911f");
+			ConversionTest ("test_fade_volume_compatibility_trick.xrns", "7332c804c21fd696eb86a9fcbb23ecff");
         }
 
         [Test]
 		public void FT2Mode ()
         {
-			ConversionTest ("test_ft2_mode.xrns", "259feb4a31eebc4545c7ed217193adfc");
+			ConversionTest ("test_ft2_mode.xrns", "1d5625dd578504b2c949f391add67c5a");
         }
 
         [Test]
 		public void GlobalCommands ()
         {
-			ConversionTest ("test_global_commands.xrns", "a1a9f3754d0298aa791b636a8b5ac60c");
+			ConversionTest ("test_global_commands.xrns", "1a7e740900e80a53393799668e4ecce4");
         }
 
         [Test]
         public void GlobalVolumeXmCommands ()
         {
-			ConversionTest ("test_global_volume_xm_commands.xrns", "223815be794edc61871a79c285dcd80b");
+			ConversionTest ("test_global_volume_xm_commands.xrns", "952366929aef04dcdf4dee27dedc9f24");
         }
 
         [Test]
         public void InstrumentEnvelopes ()
         {
-			ConversionTest ("test_instrument_envelopes.xrns", "233130acf3cc3b28f42b00b56e403c5c");
+			ConversionTest ("test_instrument_envelopes.xrns", "9611b90736a11ae2d9cf6849bdffd6ae");
         }
 
         [Test]
         public void InstrumentKeymap ()
         {
-			ConversionTest ("test_instrument_keymap.xrns", "193f232d955d07ac27c0bd6793b28dec");
+			ConversionTest ("test_instrument_keymap.xrns", "90b5bf094698f34a0b1e73defda20ded");
         }
 
         [Test]
         public void InstrumentsCommands ()
         {
-			ConversionTest ("test_instruments_commands.xrns", "a4949e2d65bce6c29ca4a95e8456f8b9");
+			ConversionTest ("test_instruments_commands.xrns", "d1ce14d20853eb8ca62aa5da5c7f965b");
         }
 
         [Test]
         public void MultiColumns ()
         {
-			ConversionTest ("test_multi_columns.xrns", "fe062d09adc179dd38f4152dfc2c018a");
+			ConversionTest ("test_multi_columns.xrns", "886d8aee962f6e42e6a727cc78b6f2c4");
         }
 
         [Test]
         public void PanningColumn ()
         {
-			ConversionTest ("test_panning_column.xrns", "6e058660aaf84f69fa0c5e8c0fe52d91");
+			ConversionTest ("test_panning_column.xrns", "e40767b74223c625d8e003505f9d31e3");
         }
 
         [Test]
         public void RenoiseStandardTPLMode ()
         {
-			ConversionTest ("test_renoise_standard_tpl_mode.xrns", "494c2ce8d03e1774c92401ca2bd482d4");
+			ConversionTest ("test_renoise_standard_tpl_mode.xrns", "92abe7b7b8e2386b9fa09e7d0fb7b3a8");
         }
 
         [Test]
         public void SampleCommands ()
         {
-			ConversionTest ("test_sample_commands.xrns", "36ecf7ec6aa674574b88623870a3f692");
+			ConversionTest ("test_sample_commands.xrns", "eb5808f2e424fe535474c9d2ac260417");
         }
 
         [Test]
         public void TickCommands ()
         {
-			ConversionTest ("test_tick_commands.xrns", "373b612b604d514c653468d70cbd51d2");
+			ConversionTest ("test_tick_commands.xrns", "d11a166a291580271d88e7c7a99a7830");
         }
 
 
         [Test]
         public void VolumeColumn ()
         {
-			ConversionTest ("test_volume_column.xrns", "001cfe7fc3063ed7a1f878c9de538688");
+			ConversionTest ("test_volume_column.xrns", "85e2f2fec2fb93901ee182e15c86dc00");
         }
 
         [Test]
         public void VolumeScalingMode ()
         {
-			ConversionTest ("test_volume_scaling_mode.xrns", "eaec9b7acfb06cb203ef0e94324401a0");
+			ConversionTest ("test_volume_scaling_mode.xrns", "667d32d0b13c6d3ebe3fe0308215f8d4");
         }
 
 
