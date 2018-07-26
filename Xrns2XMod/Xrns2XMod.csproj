@@ -89,9 +89,9 @@
     <Compile Include="ModSettings.cs" />
     <Compile Include="ModUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="..\SharedAssemblyInfo.cs">
-	  <Link>Properties\SharedAssemblyInfo.cs</Link>
-	</Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -181,10 +181,13 @@
     <None Include="resources\examples\test_volume_scaling_mode.xrns">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="resources\examples\test_volume_scaling_mode.xrns">
+    <None Include="resources\examples\test_volume_scaling_mode.xrns">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\examples\test_sample_sinc.xrns">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\templates\empty_mod.xrns">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="resources\templates\empty_xm.xrns">
