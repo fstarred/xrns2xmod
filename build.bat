@@ -1,3 +1,5 @@
+rem Run this batch from Developer Command Prompt for VS 2xxx
+
 set output_path=D:\SMS_Software\xrns2xmod
 set output_test_path=D:\SMS_Software\xrns2xmod\test
 
