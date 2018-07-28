@@ -14,6 +14,7 @@ namespace Xrns2XMod
         public event ProgressHandler ReportProgress;
 
         public static readonly int[] COMPATIBILITY_SCHEMA_LIST = new int[] { 54, 63 };
+		public int maximumNumberOfChannels = 0;
 
         // Invoke the ReportProgress event; 
         protected void OnReportProgress(EventReportProgressArgs e)
@@ -84,6 +85,10 @@ namespace Xrns2XMod
             songData.PlaybackEngineVersion = renoiseSong.GlobalSongData.PlaybackEngineVersion;
             songData.TicksPerLine = renoiseSong.GlobalSongData.TicksPerLine;
             songData.NumChannels = GetNumChannels(renoiseSong.Tracks.SequencerTrack);
+
+            if (maximumNumberOfChannels != 0 && songData.NumChannels > maximumNumberOfChannels)
+				songData.NumChannels = maximumNumberOfChannels;
+			
             songData.NumInstruments = renoiseSong.Instruments.Instrument.Length;
             songData.NumMasterTracksColumns = masterTracksTotalColumns;
             songData.InitialBPM = Convert.ToInt16(renoiseSong.GlobalSongData.BeatsPerMin);
@@ -520,6 +525,10 @@ namespace Xrns2XMod
         {
             int numRows = renoisePattern.NumberOfLines;
             int numChannels = GetNumChannels(sequencerTracks);
+
+            if (maximumNumberOfChannels != 0 && numChannels > maximumNumberOfChannels)
+				numChannels = maximumNumberOfChannels;
+			
             int patternDataSize = numRows * numChannels;
 
             TrackLineData[] patternStructsData = new TrackLineData[patternDataSize];
@@ -633,6 +642,8 @@ namespace Xrns2XMod
 
                 channelIndex += sequencerTracks[track].NumberOfVisibleNoteColumns;
 
+                if (maximumNumberOfChannels != 0 && channelIndex >= maximumNumberOfChannels)
+                	return patternStructsData;
             }
 
             return patternStructsData;

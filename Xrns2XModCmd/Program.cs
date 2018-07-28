@@ -52,6 +52,7 @@ namespace Xrns2XModCmd
                 int portamentoLossThreshold = 2;
                 int tempo = 0;
                 int ticks = 0;
+				int maximumNumberOfChannels = 0;
 
                 var p = new OptionSet() {
                     { "t|type=", "the destination format type (xm|mod).",
@@ -66,6 +67,7 @@ namespace Xrns2XModCmd
                       v => volumeScalingMode = v },
                     { "tempo=" , "the initial tempo value (affects only xm)", v => tempo = int.Parse(v) },
                     { "ticks=" , "the initial ticks/row value (affects only xm)", v => ticks = int.Parse(v) },
+					{ "maxchan=" , "maximum number of channels (e.g. 4 for ProTracker)", v => maximumNumberOfChannels = int.Parse(v) },
                     //{ "fpl=", "Apply Fine pitch not beyond x value (0 - 15)",
                     //  (int v) => fpl = v  },
                     //{ "fvl=", "Apply Fine volume not beyond x value (0 - 15)",
@@ -316,6 +318,7 @@ namespace Xrns2XModCmd
 
                     SongDataFactory songDataFactory = new SongDataFactory();
 
+					songDataFactory.maximumNumberOfChannels = maximumNumberOfChannels;
                     songDataFactory.ReportProgress += ReportProgress;
 
                     RenoiseSong renoiseSong = songDataFactory.ExtractRenoiseSong(inputFile);
