@@ -97,7 +97,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="RenoiseSong63.cs" />
+    <Compile Include="RenoiseSong64.cs" />
     <Compile Include="SampleStreamInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsBase.cs" />
