@@ -16,6 +16,14 @@ For usage documentation, check the [Wiki page](https://github.com/fstarred/xrns2
 2. Set correct <i>output_test_path</i> and <i>nunit_console_exe</i>
 3. Run <i>test.bat</i> from CLI
 
+### Renoise schema
+Renoise XML Schema song (usually named <i>RenoiseSong<version>.xsd</> can be serializated to a <i>CS</i> class by launching xsd tool:
+For example:
+
+```
+xsd.exe <input.xsd> /o:"/outputdir/"
+```
+
 ### Donation
 Xrns2XMOD is a freeware project that is developed in personal time. You can show your appreciation for this project and support future development by donating.
 
