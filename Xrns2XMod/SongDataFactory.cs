@@ -13,7 +13,7 @@ namespace Xrns2XMod
     {
         public event ProgressHandler ReportProgress;
 
-        public static readonly int[] COMPATIBILITY_SCHEMA_LIST = new int[] { 54, 63 };
+        public static readonly int[] COMPATIBILITY_SCHEMA_LIST = new int[] { 54, 63, 64 };
 
         // Invoke the ReportProgress event; 
         protected void OnReportProgress(EventReportProgressArgs e)
