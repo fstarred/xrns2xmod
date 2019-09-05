@@ -4,7 +4,17 @@
 Xrns2XMOD is a Renoise to MOD / XM format converter
 
 ### Wiki
-For documentation, check the [Wiki page](https://github.com/fstarred/xrns2xmod/wiki)
+For usage documentation, check the [Wiki page](https://github.com/fstarred/xrns2xmod/wiki)
+
+### Build
+1. Edit file <i>build<.bat|.sh></i>
+2. Set correct <i>output_path</i> and <i>output_path_test</i> variables
+3. Run <i>build<.bat|.sh></i> from CLI
+
+### Test
+1. Edit <i>test.bat</i>
+2. Set correct <i>output_test_path</i> and <i>nunit_console_exe</i>
+3. Run <i>test.bat</i> from CLI
 
 ### Donation
 Xrns2XMOD is a freeware project that is developed in personal time. You can show your appreciation for this project and support future development by donating.
