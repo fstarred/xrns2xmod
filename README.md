@@ -9,12 +9,17 @@ For usage documentation, check the [Wiki page](https://github.com/fstarred/xrns2
 ### Build
 1. Edit file <i>build<.bat|.sh></i>
 2. Set correct <i>output_path</i> and <i>output_path_test</i> variables
-3. Run <i>build<.bat|.sh></i> from CLI
+3. Run <i>build<.bat|.sh></i> from <b>Developer Command Prompt</b>
+
+### Versioning
+1. Edit file <i>SharedAssemblyInfo.cs</i>
+2. Set correct <i>AssemblyVersion</i> and <i>AssemblyInformationalVersion</i>
+3. Save file
 
 ### Test
 1. Edit <i>test.bat</i>
 2. Set correct <i>output_test_path</i> and <i>nunit_console_exe</i>
-3. Run <i>test.bat</i> from CLI
+3. Run <i>test.bat</i> from <b>Developer Command Prompt</b>
 
 ### Renoise schema
 Renoise XML Schema song (usually named <i>RenoiseSong<version>.xsd</> can be serializated to a <i>CS</i> class by launching xsd tool:
