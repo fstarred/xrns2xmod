@@ -25,6 +25,8 @@ public partial class RenoiseSong {
     
     private GlobalSongData globalSongDataField;
     
+    private RenoiseSongScriptingToolData scriptingToolDataField;
+    
     private RecordManager recordManagerField;
     
     private MidiMapper midiMapperField;
@@ -61,7 +63,7 @@ public partial class RenoiseSong {
         this.spectrumTrackDisplayAField = -2;
         this.spectrumTrackDisplayBField = -1;
         this.lastSoloedOutModeField = RenoiseSongLastSoloedOutMode.Active;
-        this.doc_versionField = 64;
+        this.doc_versionField = 65;
     }
     
     /// <remarks/>
@@ -71,6 +73,16 @@ public partial class RenoiseSong {
         }
         set {
             this.globalSongDataField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public RenoiseSongScriptingToolData ScriptingToolData {
+        get {
+            return this.scriptingToolDataField;
+        }
+        set {
+            this.scriptingToolDataField = value;
         }
     }
     
@@ -2280,7 +2292,7 @@ public partial class SequencerSendTrack {
     
     public SequencerSendTrack() {
         this.nameField = "S01";
-        this.colorField = "41,166,153";
+        this.colorField = "166,41,41";
         this.colorBlendField = ((float)(0F));
         this.stateField = SequencerSendTrackState.Active;
         this.soloedField = false;
@@ -2310,7 +2322,7 @@ public partial class SequencerSendTrack {
     }
     
     /// <remarks/>
-    [System.ComponentModel.DefaultValueAttribute("41,166,153")]
+    [System.ComponentModel.DefaultValueAttribute("166,41,41")]
     public string Color {
         get {
             return this.colorField;
@@ -2753,6 +2765,8 @@ public partial class TrackFilterDeviceChainDevices {
     private SendTrackMixerDevice[] sendTrackMixerDeviceField;
     
     private ShaperDevice[] shaperDeviceField;
+    
+    private SideChainDevice[] sideChainDeviceField;
     
     private SignalFollowerDevice[] signalFollowerDeviceField;
     
@@ -3414,6 +3428,17 @@ public partial class TrackFilterDeviceChainDevices {
         }
         set {
             this.shaperDeviceField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("SideChainDevice")]
+    public SideChainDevice[] SideChainDevice {
+        get {
+            return this.sideChainDeviceField;
+        }
+        set {
+            this.sideChainDeviceField = value;
         }
     }
     
@@ -4569,6 +4594,9 @@ public enum AudioPluginDevicePluginType {
     
     /// <remarks/>
     VST,
+    
+    /// <remarks/>
+    VST3,
     
     /// <remarks/>
     LADSPA,
@@ -9935,6 +9963,8 @@ public partial class DooferFilterDeviceChainDevices {
     
     private ShaperDevice[] shaperDeviceField;
     
+    private SideChainDevice[] sideChainDeviceField;
+    
     private SignalFollowerDevice[] signalFollowerDeviceField;
     
     private StereoExpanderDevice[] stereoExpanderDeviceField;
@@ -10560,6 +10590,17 @@ public partial class DooferFilterDeviceChainDevices {
         }
         set {
             this.shaperDeviceField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("SideChainDevice")]
+    public SideChainDevice[] SideChainDevice {
+        get {
+            return this.sideChainDeviceField;
+        }
+        set {
+            this.sideChainDeviceField = value;
         }
     }
     
@@ -28321,6 +28362,248 @@ public partial class ShaperDevicePreset {
 [System.SerializableAttribute()]
 [System.Diagnostics.DebuggerStepThroughAttribute()]
 [System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class SideChainDevice {
+    
+    private string customDeviceNameField;
+    
+    private bool isMaximizedField;
+    
+    private bool isSelectedField;
+    
+    private string selectedPresetNameField;
+    
+    private string selectedPresetLibraryField;
+    
+    private bool selectedPresetIsModifiedField;
+    
+    private SideChainDevicePreset runTimePresetAField;
+    
+    private SideChainDevicePreset runTimePresetBField;
+    
+    private FilterDeviceIsActiveParameter isActiveField;
+    
+    private bool muteSourceField;
+    
+    private FilterDeviceParameter sendAmountField;
+    
+    private FilterDeviceParameter sendPanField;
+    
+    private FilterDeviceParameter destChainIndexField;
+    
+    private FilterDeviceParameter destEffectIndexField;
+    
+    private string typeField;
+    
+    public SideChainDevice() {
+        this.isMaximizedField = true;
+        this.isSelectedField = false;
+        this.selectedPresetNameField = "Init";
+        this.selectedPresetLibraryField = "Bundled Content";
+        this.selectedPresetIsModifiedField = false;
+        this.muteSourceField = false;
+        this.typeField = "SideChainDevice";
+    }
+    
+    /// <remarks/>
+    public string CustomDeviceName {
+        get {
+            return this.customDeviceNameField;
+        }
+        set {
+            this.customDeviceNameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.ComponentModel.DefaultValueAttribute(true)]
+    public bool IsMaximized {
+        get {
+            return this.isMaximizedField;
+        }
+        set {
+            this.isMaximizedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.ComponentModel.DefaultValueAttribute(false)]
+    public bool IsSelected {
+        get {
+            return this.isSelectedField;
+        }
+        set {
+            this.isSelectedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.ComponentModel.DefaultValueAttribute("Init")]
+    public string SelectedPresetName {
+        get {
+            return this.selectedPresetNameField;
+        }
+        set {
+            this.selectedPresetNameField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.ComponentModel.DefaultValueAttribute("Bundled Content")]
+    public string SelectedPresetLibrary {
+        get {
+            return this.selectedPresetLibraryField;
+        }
+        set {
+            this.selectedPresetLibraryField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.ComponentModel.DefaultValueAttribute(false)]
+    public bool SelectedPresetIsModified {
+        get {
+            return this.selectedPresetIsModifiedField;
+        }
+        set {
+            this.selectedPresetIsModifiedField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public SideChainDevicePreset RunTimePresetA {
+        get {
+            return this.runTimePresetAField;
+        }
+        set {
+            this.runTimePresetAField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public SideChainDevicePreset RunTimePresetB {
+        get {
+            return this.runTimePresetBField;
+        }
+        set {
+            this.runTimePresetBField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public FilterDeviceIsActiveParameter IsActive {
+        get {
+            return this.isActiveField;
+        }
+        set {
+            this.isActiveField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.ComponentModel.DefaultValueAttribute(false)]
+    public bool MuteSource {
+        get {
+            return this.muteSourceField;
+        }
+        set {
+            this.muteSourceField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public FilterDeviceParameter SendAmount {
+        get {
+            return this.sendAmountField;
+        }
+        set {
+            this.sendAmountField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public FilterDeviceParameter SendPan {
+        get {
+            return this.sendPanField;
+        }
+        set {
+            this.sendPanField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public FilterDeviceParameter DestChainIndex {
+        get {
+            return this.destChainIndexField;
+        }
+        set {
+            this.destChainIndexField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public FilterDeviceParameter DestEffectIndex {
+        get {
+            return this.destEffectIndexField;
+        }
+        set {
+            this.destEffectIndexField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string type {
+        get {
+            return this.typeField;
+        }
+        set {
+            this.typeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+public partial class SideChainDevicePreset {
+    
+    private SideChainDevice deviceSlotField;
+    
+    private string typeField;
+    
+    public SideChainDevicePreset() {
+        this.typeField = "FilterDevicePreset";
+    }
+    
+    /// <remarks/>
+    public SideChainDevice DeviceSlot {
+        get {
+            return this.deviceSlotField;
+        }
+        set {
+            this.deviceSlotField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string type {
+        get {
+            return this.typeField;
+        }
+        set {
+            this.typeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
 public partial class SignalFollowerDevice {
     
     private string customDeviceNameField;
@@ -31808,7 +32091,7 @@ public partial class SequencerGroupTrack {
     
     public SequencerGroupTrack() {
         this.nameField = "Group 02";
-        this.colorField = "41,116,166";
+        this.colorField = "166,80,41";
         this.colorBlendField = ((float)(0F));
         this.stateField = SequencerGroupTrackState.Active;
         this.soloedField = false;
@@ -31838,7 +32121,7 @@ public partial class SequencerGroupTrack {
     }
     
     /// <remarks/>
-    [System.ComponentModel.DefaultValueAttribute("41,116,166")]
+    [System.ComponentModel.DefaultValueAttribute("166,80,41")]
     public string Color {
         get {
             return this.colorField;
@@ -32127,7 +32410,7 @@ public partial class SequencerTrack {
     
     public SequencerTrack() {
         this.nameField = "Track 01";
-        this.colorField = "166,41,41";
+        this.colorField = "41,166,153";
         this.colorBlendField = ((float)(0F));
         this.stateField = SequencerTrackState.Active;
         this.soloedField = false;
@@ -32157,7 +32440,7 @@ public partial class SequencerTrack {
     }
     
     /// <remarks/>
-    [System.ComponentModel.DefaultValueAttribute("166,41,41")]
+    [System.ComponentModel.DefaultValueAttribute("41,166,153")]
     public string Color {
         get {
             return this.colorField;
@@ -33414,6 +33697,8 @@ public partial class SampleFilterDeviceChainDevices {
     
     private ShaperDevice[] shaperDeviceField;
     
+    private SideChainDevice[] sideChainDeviceField;
+    
     private SignalFollowerDevice[] signalFollowerDeviceField;
     
     private StereoExpanderDevice[] stereoExpanderDeviceField;
@@ -34050,6 +34335,17 @@ public partial class SampleFilterDeviceChainDevices {
         }
         set {
             this.shaperDeviceField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("SideChainDevice")]
+    public SideChainDevice[] SideChainDevice {
+        get {
+            return this.sideChainDeviceField;
+        }
+        set {
+            this.sideChainDeviceField = value;
         }
     }
     
@@ -41680,6 +41976,87 @@ public partial class RecordManager {
         }
         set {
             this.linkedTrackIndexField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string type {
+        get {
+            return this.typeField;
+        }
+        set {
+            this.typeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(TypeName="RenoiseSong.ScriptingToolData")]
+public partial class RenoiseSongScriptingToolData1 {
+    
+    private string toolIdField;
+    
+    private string dataField;
+    
+    private string typeField;
+    
+    /// <remarks/>
+    public string ToolId {
+        get {
+            return this.toolIdField;
+        }
+        set {
+            this.toolIdField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string Data {
+        get {
+            return this.dataField;
+        }
+        set {
+            this.dataField = value;
+        }
+    }
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlAttributeAttribute()]
+    public string type {
+        get {
+            return this.typeField;
+        }
+        set {
+            this.typeField = value;
+        }
+    }
+}
+
+/// <remarks/>
+[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.6.1055.0")]
+[System.SerializableAttribute()]
+[System.Diagnostics.DebuggerStepThroughAttribute()]
+[System.ComponentModel.DesignerCategoryAttribute("code")]
+[System.Xml.Serialization.XmlTypeAttribute(AnonymousType=true)]
+public partial class RenoiseSongScriptingToolData {
+    
+    private RenoiseSongScriptingToolData1[] scriptingToolDataItemField;
+    
+    private string typeField;
+    
+    /// <remarks/>
+    [System.Xml.Serialization.XmlElementAttribute("ScriptingToolDataItem")]
+    public RenoiseSongScriptingToolData1[] ScriptingToolDataItem {
+        get {
+            return this.scriptingToolDataItemField;
+        }
+        set {
+            this.scriptingToolDataItemField = value;
         }
     }
     
