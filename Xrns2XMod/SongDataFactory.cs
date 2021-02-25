@@ -13,7 +13,7 @@ namespace Xrns2XMod
     {
         public event ProgressHandler ReportProgress;
 
-        public static readonly int[] COMPATIBILITY_SCHEMA_LIST = new int[] { 54, 63, 64 };
+        //public static readonly int[] COMPATIBILITY_SCHEMA_LIST = new int[] { 54, 63, 64 };
 
         // Invoke the ReportProgress event; 
         protected void OnReportProgress(EventReportProgressArgs e)
@@ -46,9 +46,9 @@ namespace Xrns2XMod
             {
                 int docVersion = renoiseSong.doc_version;
 
-                if (Array.BinarySearch(COMPATIBILITY_SCHEMA_LIST, docVersion) < 0)
-                    throw new XrnsException("Song version is not supported by this Xrns2XMod version. Try to save it with a " +
-                            "renoise compatible version (check the homepage for more info)");
+                //if (Array.BinarySearch(COMPATIBILITY_SCHEMA_LIST, docVersion) < 0)
+                //    throw new XrnsException("Song version is not supported by this Xrns2XMod version. Try to save it with a " +
+                //            "renoise compatible version (check the homepage for more info)");
             }
             finally
             {

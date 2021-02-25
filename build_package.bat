@@ -4,7 +4,7 @@ rem place package_files.txt under same directory
 
 set source_path=D:\SMS_Software\xrns2xmod\
 set files=
-set version=5.0.0.0
+set version=5.2.0.0
 set output_file=xrns2xmod_cli_win_x64_%version%.zip
 
 if exist %source_path%ini\*.ini del %source_path%ini\*.ini
