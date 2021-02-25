@@ -21,12 +21,17 @@ For usage documentation, check the [Wiki page](https://github.com/fstarred/xrns2
 2. Set correct <i>output_test_path</i> and <i>nunit_console_exe</i>
 3. Run <i>test.bat</i> from <b>Developer Command Prompt</b>
 
+### Release
+1. git-flow release start <version>
+2. Change version
+3. git-flow release finish
+
 ### Renoise schema
 Renoise XML Schema song (usually named <i>RenoiseSong<version>.xsd</> can be serializated to a <i>CS</i> class by launching xsd tool:
 For example:
 
 ```
-xsd.exe <input.xsd> /o:"/outputdir/"
+xsd.exe <input.xsd> /classes /o:"/outputdir/"
 ```
 
 ### Donation
