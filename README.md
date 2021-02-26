@@ -22,7 +22,7 @@ For usage documentation, check the [Wiki page](https://github.com/fstarred/xrns2
 3. Run <i>test.bat</i> from <b>Developer Command Prompt</b>
 
 ### Release
-1. git-flow release start <version>
+1. git-flow release start \<version>
 2. Change version
 3. git-flow release finish
 
