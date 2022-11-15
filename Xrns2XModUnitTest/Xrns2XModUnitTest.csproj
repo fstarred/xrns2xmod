@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Xrns2XModUnitTest</RootNamespace>
     <AssemblyName>Xrns2XModUnitTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -60,13 +60,14 @@
     <Compile Include="Resource.cs" />
     <Compile Include="UnitTestMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-	<Compile Include="..\SharedAssemblyInfo.cs">
-	  <Link>Properties\SharedAssemblyInfo.cs</Link>
-	</Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="UnitTestXM.cs" />
     <Compile Include="UnitTestBass.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="default.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
