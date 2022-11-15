@@ -21,8 +21,8 @@ namespace Xrns2XModUI
         {
             ModSettings settings = new ModSettings();
 
-            settings.ForceProTrackerCompatibility = Settings.Default.PTCompatibiliy;
-            //settings.MantainOriginalSampleFreq = Settings.Default.MantainOriginalSampleFreq;
+            settings.ForceProTrackerCompatibility = Settings.Default.PTCompatibiliy ? PROTRACKER_COMPATIBILITY_MODE.A3MAX : PROTRACKER_COMPATIBILITY_MODE.NONE;
+            //settings.MantainOriginalSampleFreq = Settings.Default.MantainOriginalSampleFreq;E
             settings.VolumeScalingMode = Settings.Default.VolumeScalingMode;
             settings.PortamentoLossThreshold = Settings.Default.PortamentoLossTreshold;
 
