@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Xrns2XModUI</RootNamespace>
     <AssemblyName>Xrns2XModUI</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>logo_icon_l.ico</ApplicationIcon>
     <IsWebBootstrapper>false</IsWebBootstrapper>

@@ -14,7 +14,9 @@ msbuild Xrns2XModCmd/Xrns2XModCmd.csproj /t:rebuild /p:Configuration=Release /p:
 
 msbuild Xrns2XModUnitTest\Xrns2XModUnitTest.csproj /t:rebuild /p:Configuration=Release /p:DebugSymbols=false /p:DebugType=None /p:Platform="x64" /p:OutputPath=%output_test_path%
 
+exit /B 0
+
 :no_command_found
-echo This batch must be launched from Developer Command Prompt for VS 2xxx
+echo build must be launched from Developer Command Prompt for VS 2xxx
 exit /B 1
 goto :eof
